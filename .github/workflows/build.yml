@@ -27,14 +27,26 @@ jobs:
     - name: Install
       run: npm ci
 
+    - name: Test
+      run: npm test
+
+    - name: Install Wine
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo mkdir -pm755 /etc/apt/keyrings
+        sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+        sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+        sudo apt update
+        sudo apt install --install-recommends winehq-stable
+
     - name: Build
-      run: npm run build
+      run: |
+        npm run build
+        npm run electron:make:windows
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with: 
-        name: Build
-        path: build
-
-    - name: Test
-      run: npm test
+        name: Installer
+        path: out/make/squirrel.windows/x64/degree-planner-* Setup.exe
+        retention-days: 14
