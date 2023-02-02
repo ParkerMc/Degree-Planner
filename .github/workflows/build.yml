@@ -40,7 +40,9 @@ jobs:
         sudo apt install --install-recommends winehq-stable
 
     - name: Build
-      run: npm run electron:make:windows
+      run: |
+        npm run build
+        npm run electron:make:windows
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
