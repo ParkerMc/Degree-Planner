@@ -49,3 +49,4 @@ jobs:
       with: 
         name: Installer
         path: out/make/squirrel.windows/x64/degree-planner-* Setup.exe
+        retention-days: 14
