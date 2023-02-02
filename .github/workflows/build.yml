@@ -36,5 +36,5 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with: 
-        name: Build
-        path: build
+        name: Installer
+        path: out/make/squirrel.windows/x64/degree-planner-* Setup.exe

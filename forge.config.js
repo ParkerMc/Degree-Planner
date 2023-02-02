@@ -1,5 +1,17 @@
+
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    ignore: [
+      "^\\/public$",
+      "^\\/src$",
+      "^\\/node_modules$",
+      "^\\/[.].+",
+    ],
+    win32metadata: {
+      ProductName: "Degree Planner",
+      CompanyName: "UTD Students",
+    },
+  },
   rebuildConfig: {},
   makers: [
     {
