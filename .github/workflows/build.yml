@@ -1,0 +1,40 @@
+name: Build Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18 ]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with: 
+        name: Build
+        path: build
+
+    - name: Test
+      run: npm test
