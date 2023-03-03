@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "ccjr.emotion-auto-css",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+    ]
+}

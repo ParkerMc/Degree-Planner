@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // Define a type for the slice state
-interface TranscriptState {
+interface DevState {
   value: number
 }
 
 // Define the initial state using that type
-const initialState: TranscriptState = {
+const initialState: DevState = {
   value: 0,
 }
 
-export const transcriptSlice = createSlice({
-  name: 'transcript',
+export const devSlice = createSlice({
+  name: 'dev',
   initialState,
   reducers: {
     increment: (state) => {
@@ -31,6 +31,6 @@ export const transcriptSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = transcriptSlice.actions
+export const { increment, decrement, incrementByAmount } = devSlice.actions
 
-export default transcriptSlice.reducer
+export default devSlice.reducer

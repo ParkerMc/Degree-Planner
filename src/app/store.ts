@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import transcriptSlice from '../features/transcript/transcriptSlice'
+import devSlice from '../features/dev/devSlice'
 
 export const store = configureStore({
   reducer: {
-    transcript: transcriptSlice
+    dev: devSlice
   },
 })
 
