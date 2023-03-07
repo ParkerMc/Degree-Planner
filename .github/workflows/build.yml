@@ -1,52 +1,52 @@
 name: Build Pipeline
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [ 18 ]
+        strategy:
+            matrix:
+                node-version: [18]
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    
-    - name: Install
-      run: npm ci
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
 
-    - name: Test
-      run: npm test
+            - name: Install
+              run: npm ci
 
-    - name: Install Wine
-      run: |
-        sudo dpkg --add-architecture i386
-        sudo mkdir -pm755 /etc/apt/keyrings
-        sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-        sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-        sudo apt update
-        sudo apt install --install-recommends winehq-stable
+            - name: Test
+              run: npm test
 
-    - name: Build
-      run: |
-        npm run build
-        npm run electron:make:windows
+            - name: Install Wine
+              run: |
+                  sudo dpkg --add-architecture i386
+                  sudo mkdir -pm755 /etc/apt/keyrings
+                  sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+                  sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+                  sudo apt update
+                  sudo apt install --install-recommends winehq-stable
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
-      with: 
-        name: Installer
-        path: out/make/squirrel.windows/x64/degree-planner-* Setup.exe
-        retention-days: 14
+            - name: Build
+              run: |
+                  npm run build
+                  npm run electron:make:windows
+
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: Installer
+                  path: out/make/squirrel.windows/x64/degree-planner-* Setup.exe
+                  retention-days: 14
