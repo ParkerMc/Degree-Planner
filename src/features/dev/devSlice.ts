@@ -24,13 +24,13 @@ export const devSlice = createSlice({
         decrement: (state) => {
             state.value -= 1
         },
-        incrementByAmount: (state, action: PayloadAction<number>) => {
-            state.value += action.payload
+        setValue: (state, action: PayloadAction<number>) => {
+            state.value = action.payload
         },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = devSlice.actions
+export const { increment, decrement, setValue } = devSlice.actions
 
 export default devSlice.reducer

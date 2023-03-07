@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import AdditionalInformation from './pages/AdditionalInformation'
 import Home from './pages/Home'
 import Print from './pages/Print'
@@ -34,11 +36,19 @@ const router = createBrowserRouter([
     },
 ])
 
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+})
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <RouterProvider router={router} />
+            <ThemeProvider theme={darkTheme}>
+                <CssBaseline />
+                <RouterProvider router={router} />
+            </ThemeProvider>
         </Provider>
     </React.StrictMode>
 )
