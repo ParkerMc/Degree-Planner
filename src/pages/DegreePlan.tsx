@@ -35,7 +35,14 @@ export default function DegreePlan() {
                             setRows([...rows, ''])
                         }}
                         onRemove={() => {
-                            setRows([...rows.slice(0, i), ...rows.slice(i + 1)])
+                            if (rows.length > 1) {
+                                setRows([
+                                    ...rows.slice(0, i),
+                                    ...rows.slice(i + 1),
+                                ])
+                            } else {
+                                setRows([''])
+                            }
                         }}
                     />
                 ))}
