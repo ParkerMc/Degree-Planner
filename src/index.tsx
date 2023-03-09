@@ -12,6 +12,7 @@ import AdditionalInformation from './pages/AdditionalInformation'
 import Home from './pages/Home'
 import Print from './pages/Print'
 import DegreePlan from './pages/DegreePlan'
+import Audit from './pages/Audit'
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     {
         path: '/additionalInfo',
         element: <AdditionalInformation />,
+    },
+    {
+        path: '/audit',
+        element: <Audit />,
     },
     {
         path: '/dev',
