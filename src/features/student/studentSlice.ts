@@ -65,16 +65,22 @@ export const importTranscript = createAsyncThunk(
                 .filter((element) => element.str.trim() !== '')
                 .reduce((tmpRows, element) => {
                     const group = tmpRows[element.transform[5]] ?? []
-                    group.push(element.str)
+                    group.push(element)
                     tmpRows[element.transform[5]] = group
                     return tmpRows
-                }, {} as { [x: number]: string[] })
+                }, {} as { [x: number]: PdfTextItem[] })
 
             // Get the row posses sorted in reverse(y=0 is at the bottom)
             const rowPoses = Object.keys(pageRows)
                 .map(Number)
                 .sort((a, b) => b - a)
-            pages.push(rowPoses.map((pos) => pageRows[pos]))
+            pages.push(
+                rowPoses.map((pos) =>
+                    pageRows[pos]
+                        .sort((a, b) => a.transform[4] - b.transform[4])
+                        .map((element) => element.str)
+                )
+            )
         }
 
         // TODO do stuff here
