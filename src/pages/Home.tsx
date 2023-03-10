@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Fab, Grid } from '@mui/material'
+import { Backdrop, CircularProgress, Fab, Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { ImportExport, Upload } from '@mui/icons-material'
@@ -9,7 +9,7 @@ import importSave from '../features/importSave'
 
 // TODO add drag and drop support
 export default function Home() {
-    const [studentLoading, transcriptLoaded, studentLoaded] = useAppSelector(
+    const [loading, transcriptLoaded, studentLoaded] = useAppSelector(
         (state) => [
             state.student.loading,
             state.student.transcriptLoaded,
@@ -29,13 +29,13 @@ export default function Home() {
 
     const studentDataFileSelected = (files: FileList | null) => {
         if (!files) {
-            return // TODO error
+            return
         }
         dispatch(importSave(files[0]))
     }
     const transcriptFileSelected = (files: FileList | null) => {
         if (!files) {
-            return // TODO error
+            return
         }
         dispatch(importTranscript(files[0]))
     }
@@ -50,6 +50,16 @@ export default function Home() {
                 <Navigate to={'/additionalInfo'} />
             ) : null}
 
+            <Backdrop
+                sx={{
+                    color: '#fff',
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+
             <Grid container spacing={4}>
                 <Grid item>
                     <input
@@ -62,7 +72,6 @@ export default function Home() {
                         }
                     />
                     <Fab
-                        disabled={studentLoading}
                         variant="extended"
                         size="large"
                         onClick={() => {
@@ -82,7 +91,6 @@ export default function Home() {
                         onChange={(e) => transcriptFileSelected(e.target.files)}
                     />
                     <Fab
-                        disabled={studentLoading}
                         variant="extended"
                         size="large"
                         onClick={() => {

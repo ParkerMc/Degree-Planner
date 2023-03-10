@@ -13,6 +13,7 @@ import Home from './pages/Home'
 import Print from './pages/Print'
 import DegreePlan from './pages/DegreePlan'
 import Audit from './pages/Audit'
+import Notification from './components/Notification'
 
 const router = createBrowserRouter([
     {
@@ -53,6 +54,7 @@ root.render(
             <ThemeProvider theme={darkTheme}>
                 <CssBaseline />
                 <RouterProvider router={router} />
+                <Notification />
             </ThemeProvider>
         </Provider>
     </React.StrictMode>

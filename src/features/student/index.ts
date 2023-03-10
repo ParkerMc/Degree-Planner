@@ -25,8 +25,7 @@ const studentSlice = createSlice({
     reducers: {},
     extraReducers: (builder) =>
         builder
-            .addCase(importTranscript.pending, (state, action) => {
-                // TODO add loading overlay
+            .addCase(importTranscript.pending, (state, _action) => {
                 state.loading = true
             })
             .addCase(importTranscript.fulfilled, (state, action) => {
@@ -35,13 +34,10 @@ const studentSlice = createSlice({
                 state.transcriptLoaded = true
                 console.log(state)
             })
-            .addCase(importTranscript.rejected, (state, action) => {
+            .addCase(importTranscript.rejected, (state, _action) => {
                 state.loading = false
-                // TODO setup real error handling
-                console.error(action.error)
             })
-            .addCase(importSave.pending, (state, action) => {
-                // TODO add loading overlay
+            .addCase(importSave.pending, (state, _action) => {
                 state.loading = true
             })
             .addCase(importSave.fulfilled, (state, action) => {
@@ -50,10 +46,8 @@ const studentSlice = createSlice({
                 state.transcriptLoaded = true
                 state.loaded = true
             })
-            .addCase(importSave.rejected, (state, action) => {
+            .addCase(importSave.rejected, (state, _action) => {
                 state.loading = false
-                // TODO setup real error handling
-                console.error(action.error)
             }),
 })
 

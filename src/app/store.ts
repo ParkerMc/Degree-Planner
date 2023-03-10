@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 // import { createLogger } from 'redux-logger'
 import devSlice from '../features/dev/devSlice'
+import notification from '../features/notification'
 import student from '../features/student'
 
 export const store = configureStore({
     reducer: {
         dev: devSlice,
         student,
+        notification,
     },
     // middleware: (getDefaultMiddleware) =>
     //     getDefaultMiddleware().concat(createLogger()),

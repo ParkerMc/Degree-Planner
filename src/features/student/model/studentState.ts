@@ -4,5 +4,5 @@ export interface StudentState {
     loading: boolean
     loaded: boolean
     transcriptLoaded: boolean
-    student: StudentData
+    student: StudentData // TODO make nullable
 }
