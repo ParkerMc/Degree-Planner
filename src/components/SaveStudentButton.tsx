@@ -1,19 +1,35 @@
 import { Save } from '@mui/icons-material'
 import { Box, Fab } from '@mui/material'
-import { useAppSelector } from '../app/hooks'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { addNotification } from '../features/notification'
 import { SaveData } from '../features/saveData'
+import version from '../version'
 
 export default function SaveStudentButton() {
-    const saveData: SaveData = useAppSelector((state) => ({
-        student: state.student.student,
+    const { transcript, additionalInfo } = useAppSelector((state) => ({
+        transcript: state.student.transcript,
+        additionalInfo: state.student.additionalInfo,
     }))
+    const dispatch = useAppDispatch()
 
     const downloadJson = () => {
-        const json = JSON.stringify(saveData)
+        if (!transcript || !additionalInfo) {
+            dispatch(
+                addNotification({
+                    type: 'error',
+                    message: 'Failed to save partal student',
+                    timeout: undefined,
+                })
+            )
+            return
+        }
+        const saveData: SaveData = { version, transcript, additionalInfo }
         const element = document.createElement('a')
-        const file = new Blob([json], { type: 'application/json' })
+        const file = new Blob([JSON.stringify(saveData)], {
+            type: 'application/json',
+        })
         element.href = URL.createObjectURL(file)
-        element.download = `${saveData.student.name}-${saveData.student.id}-DegreePlan.json`
+        element.download = `${transcript.name}-${transcript.id}-DegreePlan.json`
         document.body.appendChild(element) // Required for this to work in FireFox
         element.click()
     }

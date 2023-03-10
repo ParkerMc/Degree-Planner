@@ -9,11 +9,11 @@ import importSave from '../features/importSave'
 
 // TODO add drag and drop support
 export default function Home() {
-    const [loading, transcriptLoaded, studentLoaded] = useAppSelector(
+    const [loading, transcriptLoaded, additionalInfoLoaded] = useAppSelector(
         (state) => [
             state.student.loading,
-            state.student.transcriptLoaded,
-            state.student.loaded,
+            state.student.transcript !== undefined,
+            state.student.additionalInfo !== undefined,
         ]
     )
     const dispatch = useAppDispatch()
@@ -44,11 +44,13 @@ export default function Home() {
         <Container>
             <h2>Select an option below</h2>
             <p>Or drop a file anywhere in this window(TODO)</p>
-            {studentLoaded ? (
-                <Navigate to={'/degreePlan'} />
-            ) : transcriptLoaded ? (
-                <Navigate to={'/additionalInfo'} />
-            ) : null}
+            {transcriptLoaded ? (
+                additionalInfoLoaded ? (
+                    <Navigate to={'/degreePlan'} />
+                ) : (
+                    <Navigate to={'/additionalInfo'} />
+                )
+            ) : undefined}
 
             <Backdrop
                 sx={{

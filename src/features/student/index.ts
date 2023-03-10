@@ -1,22 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import importSave from '../importSave'
 import importTranscript from './importTranscript'
-import { Semester, StudentState } from './model'
+import { StudentState } from './model'
 
 const initialState: StudentState = {
     loading: false,
-    loaded: false,
-    transcriptLoaded: false,
-    student: {
-        name: '',
-        id: '',
-        major: '',
-        semesterAdmitted: { semester: Semester.None, year: 0 },
-        classes: [],
-        track: '',
-        fastTrack: false,
-        thesis: false,
-    },
 }
 
 const studentSlice = createSlice({
@@ -29,10 +17,8 @@ const studentSlice = createSlice({
                 state.loading = true
             })
             .addCase(importTranscript.fulfilled, (state, action) => {
-                state.student = { ...state.student, ...action.payload }
+                state.transcript = action.payload
                 state.loading = false
-                state.transcriptLoaded = true
-                console.log(state)
             })
             .addCase(importTranscript.rejected, (state, _action) => {
                 state.loading = false
@@ -41,10 +27,9 @@ const studentSlice = createSlice({
                 state.loading = true
             })
             .addCase(importSave.fulfilled, (state, action) => {
-                state.student = action.payload.student
+                state.transcript = action.payload.transcript
+                state.additionalInfo = action.payload.additionalInfo
                 state.loading = false
-                state.transcriptLoaded = true
-                state.loaded = true
             })
             .addCase(importSave.rejected, (state, _action) => {
                 state.loading = false

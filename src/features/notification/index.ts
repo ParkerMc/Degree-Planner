@@ -31,7 +31,7 @@ export const notificationSlice = createSlice({
                 ...notificationInitialState,
                 message: 'Importing Transcript',
                 open: true,
-                timeout: null,
+                timeout: undefined,
                 canClose: false,
             }))
             .addCase(importTranscript.fulfilled, (_state, _action) => ({
@@ -47,14 +47,14 @@ export const notificationSlice = createSlice({
                     type: 'error',
                     message: `Failed to Import Transcript: ${action.error.message}`,
                     open: true,
-                    timeout: null,
+                    timeout: undefined,
                 }
             })
             .addCase(importSave.pending, (_state, _action) => ({
                 ...notificationInitialState,
                 message: 'Loading Student',
                 open: true,
-                timeout: null,
+                timeout: undefined,
                 canClose: false,
             }))
             .addCase(importSave.fulfilled, (_state, _action) => ({
@@ -70,7 +70,7 @@ export const notificationSlice = createSlice({
                     type: 'error',
                     message: `Failed to Load Student: ${action.error.message}`,
                     open: true,
-                    timeout: null,
+                    timeout: undefined,
                 }
             }),
 })

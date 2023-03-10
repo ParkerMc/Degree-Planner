@@ -49,6 +49,7 @@ export default function DegreePlan() {
                 ))}
             </Box>
             <Grid container spacing={2}>
+                {/* TODO add reset button */}
                 <Grid item>
                     <SaveStudentButton />
                 </Grid>

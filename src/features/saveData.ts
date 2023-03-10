@@ -1,6 +1,7 @@
-import { StudentData } from './student/model'
+import { AdditionalInfo, TranscriptData } from './student/model'
 
-// TODO add version and some field to ensure we exported to save data
 export interface SaveData {
-    student: StudentData
+    version: string
+    transcript: TranscriptData
+    additionalInfo: AdditionalInfo
 }
