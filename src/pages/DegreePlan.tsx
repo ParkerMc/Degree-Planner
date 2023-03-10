@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
-import { Print, SafetyCheck, Save } from '@mui/icons-material'
+import { Print, SafetyCheck } from '@mui/icons-material'
 import { Box, Fab, Grid } from '@mui/material'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import DegreePlanRow from '../components/DegreePlanRow'
+import SaveStudentButton from '../components/SaveStudentButton'
 
 export default function DegreePlan() {
     const [rows, setRows] = useState([''])
@@ -49,14 +50,7 @@ export default function DegreePlan() {
             </Box>
             <Grid container spacing={2}>
                 <Grid item>
-                    <Fab
-                        variant="extended"
-                        size="large"
-                        onClick={() => alert('Save not Implemented')}
-                    >
-                        <Save />
-                        Save
-                    </Fab>
+                    <SaveStudentButton />
                 </Grid>
                 <Grid item>
                     <Link to="/print">

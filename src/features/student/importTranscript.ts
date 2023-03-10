@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import { Semester, TranscriptData } from './model'
 import * as pdfjs from 'pdfjs-dist'
 import { TextItem as PdfTextItem } from 'pdfjs-dist/types/src/display/api'
 
@@ -7,49 +8,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url
 ).toString()
 
-// Define a type for the slice state
-interface StudentState {
-    transcript: TranscriptState
-}
-
-interface TranscriptState {
-    loading: boolean
-    loaded: boolean
-}
-
-// Define the initial state using that type
-const initialState: StudentState = {
-    transcript: { loading: false, loaded: false },
-}
-
-export const studentSlice = createSlice({
-    name: 'student',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        // TODO add error case
-        builder
-            .addCase(importTranscript.pending, (state, action) => {
-                // TODO add loading overlay
-                state.transcript.loading = true
-            })
-            .addCase(importTranscript.fulfilled, (state, action) => {
-                state.transcript = action.payload
-            })
-            .addCase(importTranscript.rejected, (state, action) => {
-                state.transcript.loading = false
-                // TODO setup real error handling
-                console.error(action.error)
-            })
-    },
-})
-
-// // Action creators are generated for each case reducer function
-// export const { importTranscriptState } = transcriptSlice.actions
-
-export const importTranscript = createAsyncThunk(
+const importTranscript = createAsyncThunk(
     'student/importTranscript',
-    async (file: Blob): Promise<TranscriptState> => {
+    async (file: Blob): Promise<TranscriptData> => {
         const pdf = await pdfjs.getDocument(await file.arrayBuffer()).promise
         let pages: string[][][] = []
         for (let i = 1; i <= pdf.numPages; i++) {
@@ -87,15 +48,12 @@ export const importTranscript = createAsyncThunk(
         console.log(pages)
 
         return {
-            loaded: true,
-            loading: false,
+            name: 'Nick Reisinger',
+            id: '2021511791',
+            major: 'Computer Science',
+            semesterAdmitted: { semester: Semester.Fall, year: 2020 },
+            classes: [],
         }
     }
 )
-// export const importTranscript = (
-//     filePath: string
-// ): PayloadAction<TranscriptState, any> => {
-//     const reader = new FileReader()
-//     return transcriptSlice.actions.importTranscriptState({})
-// }
-export default studentSlice.reducer
+export default importTranscript
