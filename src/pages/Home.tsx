@@ -1,14 +1,21 @@
 import styled from '@emotion/styled'
 import { Fab, Grid } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { ImportExport, Upload } from '@mui/icons-material'
+import { importTranscript } from '../features/student/studentSlice'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 
 // TODO add drag and drop support
 export default function Home() {
-    const studentDataInput = useRef<HTMLInputElement>(null)
-    const transcriptInput = useRef<HTMLInputElement>(null)
+    const [transcriptLoaded, transcriptLoading] = useAppSelector((state) => [
+        state.student.transcript.loaded,
+        state.student.transcript.loading,
+    ])
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const transcriptInput = useRef<HTMLInputElement>(null)
+    const studentDataInput = useRef<HTMLInputElement>(null)
 
     const Container = styled.div`
         display: flex;
@@ -17,19 +24,22 @@ export default function Home() {
         align-items: center;
     `
 
-    const studentDataFileSelected = (filePath: string) => {
-        console.log(filePath)
+    const studentDataFileSelected = (files: FileList | null) => {
+        console.log(files)
         navigate('/degreePlan')
     }
-    const transcriptFileSelected = (filePath: string) => {
-        console.log(filePath)
-        navigate('/additionalInfo')
+    const transcriptFileSelected = (files: FileList | null) => {
+        if (!files) {
+            return // TODO error
+        }
+        dispatch(importTranscript(files[0]))
     }
 
     return (
         <Container>
             <h2>Select an option below</h2>
             <p>Or drop a file anywhere in this window(TODO)</p>
+            {transcriptLoaded ? <Navigate to={'/additionalInfo'} /> : null}
             <Grid container spacing={4}>
                 <Grid item>
                     <input
@@ -38,10 +48,11 @@ export default function Home() {
                         style={{ display: 'none' }}
                         accept="application/JSON"
                         onChange={(e) =>
-                            studentDataFileSelected(e.target.value)
+                            studentDataFileSelected(e.target.files)
                         }
                     />
                     <Fab
+                        disabled={transcriptLoading}
                         variant="extended"
                         size="large"
                         onClick={() => {
@@ -58,9 +69,10 @@ export default function Home() {
                         ref={transcriptInput}
                         style={{ display: 'none' }}
                         accept="application/pdf"
-                        onChange={(e) => transcriptFileSelected(e.target.value)}
+                        onChange={(e) => transcriptFileSelected(e.target.files)}
                     />
                     <Fab
+                        disabled={transcriptLoading}
                         variant="extended"
                         size="large"
                         onClick={() => {
