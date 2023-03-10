@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { createLogger } from 'redux-logger'
+// import { createLogger } from 'redux-logger'
 import devSlice from '../features/dev/devSlice'
 import student from '../features/student'
 
@@ -8,8 +8,8 @@ export const store = configureStore({
         dev: devSlice,
         student,
     },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(createLogger()),
+    // middleware: (getDefaultMiddleware) =>
+    //     getDefaultMiddleware().concat(createLogger()),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
