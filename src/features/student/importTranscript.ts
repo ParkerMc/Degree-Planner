@@ -46,7 +46,7 @@ const importTranscript = createAsyncThunk(
 
         // TODO do stuff here
         console.log(pages)
-        
+
         // Example below of what to do when you need to present an error back to the user
         // throw new Error('Not a transcript')
 

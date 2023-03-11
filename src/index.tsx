@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import Dev from './pages/Dev'
 import reportWebVitals from './reportWebVitals'
+import { SnackbarProvider } from 'notistack'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -13,7 +14,8 @@ import Home from './pages/Home'
 import Print from './pages/Print'
 import DegreePlan from './pages/DegreePlan'
 import Audit from './pages/Audit'
-import Notification from './components/Notification'
+import NotificationCloseButton from './components/NotificationCloseButton'
+import LoadingOverlay from './components/LoadingOverlay'
 
 const router = createBrowserRouter([
     {
@@ -54,7 +56,13 @@ root.render(
             <ThemeProvider theme={darkTheme}>
                 <CssBaseline />
                 <RouterProvider router={router} />
-                <Notification />
+                <LoadingOverlay />
+                <SnackbarProvider
+                    maxSnack={5}
+                    action={(snackbarKey) => (
+                        <NotificationCloseButton snackbarKey={snackbarKey} />
+                    )}
+                />
             </ThemeProvider>
         </Provider>
     </React.StrictMode>
