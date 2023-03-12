@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals'
 import { SnackbarProvider } from 'notistack'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createHashRouter, RouterProvider } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import AdditionalInformation from './pages/AdditionalInformation'
@@ -17,7 +17,7 @@ import Audit from './pages/Audit'
 import NotificationCloseButton from './components/NotificationCloseButton'
 import LoadingOverlay from './components/LoadingOverlay'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: '/',
         element: <Home />,

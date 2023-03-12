@@ -1,16 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Semester, TranscriptData } from './model'
-import * as pdfjs from 'pdfjs-dist'
 import { TextItem as PdfTextItem } from 'pdfjs-dist/types/src/display/api'
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.js',
-    import.meta.url
-).toString()
 
 const importTranscript = createAsyncThunk(
     'student/importTranscript',
     async (file: Blob): Promise<TranscriptData> => {
+        // We import this here so that it's only loaded during client-side rendering.
+        const pdfjs = await import('pdfjs-dist')
+        pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js'
         const pdf = await pdfjs.getDocument(await file.arrayBuffer()).promise
         let pages: string[][][] = []
         for (let i = 1; i <= pdf.numPages; i++) {
