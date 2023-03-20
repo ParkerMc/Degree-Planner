@@ -1,7 +1,6 @@
+const { app, BrowserWindow, ipcMain } = require('electron')
+const fs = require('fs')
 const path = require('path')
-const { app, BrowserWindow } = require('electron')
-const shortcutName = 'Degree Planner'
-
 // Handle install here
 if (!handleSquirrelEvent()) {
     // This method will be called when Electron has finished
@@ -39,7 +38,7 @@ function handleSquirrelEvent() {
     const exeName = path.basename(process.execPath)
 
     const spawn = function (command, args) {
-        let spawnedProcess, error
+        let spawnedProcess
 
         try {
             spawnedProcess = ChildProcess.spawn(command, args, {
@@ -86,16 +85,19 @@ function handleSquirrelEvent() {
 
             app.quit()
             return true
+        default:
+            return true
     }
 }
 
 function createWindow() {
+    ipcMain.handle('degreeRequirements', loadRequirements)
     // Create the browser window.
     const win = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js'),
         },
     })
 
@@ -110,4 +112,15 @@ function createWindow() {
     if (!app.isPackaged) {
         win.webContents.openDevTools({ mode: 'detach' })
     }
+}
+
+function loadRequirements(event) {
+    const requirementsFolder = path.join(__dirname, 'degreeRequirements')
+    const files = fs
+        .readdirSync(requirementsFolder)
+        .filter((f) => f.endsWith('.json') && !f.startsWith('package'))
+        .map((f) =>
+            JSON.parse(fs.readFileSync(path.join(requirementsFolder, f)))
+        )
+    return files
 }
