@@ -1,14 +1,24 @@
 import styled from '@emotion/styled'
-import { Fab, Grid } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { Backdrop, CircularProgress, Fab, Grid } from '@mui/material'
+import { Navigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { ImportExport, Upload } from '@mui/icons-material'
+import importTranscript from '../features/student/importTranscript'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import importSave from '../features/importSave'
 
 // TODO add drag and drop support
 export default function Home() {
-    const studentDataInput = useRef<HTMLInputElement>(null)
+    const [loading, transcriptLoaded, additionalInfoLoaded] = useAppSelector(
+        (state) => [
+            state.student.loading,
+            state.student.transcript !== undefined,
+            state.student.additionalInfo !== undefined,
+        ]
+    )
+    const dispatch = useAppDispatch()
     const transcriptInput = useRef<HTMLInputElement>(null)
-    const navigate = useNavigate()
+    const studentDataInput = useRef<HTMLInputElement>(null)
 
     const Container = styled.div`
         display: flex;
@@ -17,19 +27,41 @@ export default function Home() {
         align-items: center;
     `
 
-    const studentDataFileSelected = (filePath: string) => {
-        console.log(filePath)
-        navigate('/degreePlan')
+    const studentDataFileSelected = (files: FileList | null) => {
+        if (!files) {
+            return
+        }
+        dispatch(importSave(files[0]))
     }
-    const transcriptFileSelected = (filePath: string) => {
-        console.log(filePath)
-        navigate('/additionalInfo')
+    const transcriptFileSelected = (files: FileList | null) => {
+        if (!files) {
+            return
+        }
+        dispatch(importTranscript(files[0]))
     }
 
     return (
         <Container>
             <h2>Select an option below</h2>
             <p>Or drop a file anywhere in this window(TODO)</p>
+            {transcriptLoaded ? (
+                additionalInfoLoaded ? (
+                    <Navigate to={'/degreePlan'} />
+                ) : (
+                    <Navigate to={'/additionalInfo'} />
+                )
+            ) : undefined}
+
+            <Backdrop
+                sx={{
+                    color: '#fff',
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+
             <Grid container spacing={4}>
                 <Grid item>
                     <input
@@ -38,7 +70,7 @@ export default function Home() {
                         style={{ display: 'none' }}
                         accept="application/JSON"
                         onChange={(e) =>
-                            studentDataFileSelected(e.target.value)
+                            studentDataFileSelected(e.target.files)
                         }
                     />
                     <Fab
@@ -58,7 +90,7 @@ export default function Home() {
                         ref={transcriptInput}
                         style={{ display: 'none' }}
                         accept="application/pdf"
-                        onChange={(e) => transcriptFileSelected(e.target.value)}
+                        onChange={(e) => transcriptFileSelected(e.target.files)}
                     />
                     <Fab
                         variant="extended"
