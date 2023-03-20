@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Backdrop, CircularProgress, Fab, Grid } from '@mui/material'
+import { Fab, Grid } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { ImportExport, Upload } from '@mui/icons-material'
@@ -9,13 +9,10 @@ import importSave from '../features/importSave'
 
 // TODO add drag and drop support
 export default function Home() {
-    const [loading, transcriptLoaded, additionalInfoLoaded] = useAppSelector(
-        (state) => [
-            state.student.loading,
-            state.student.transcript !== undefined,
-            state.student.additionalInfo !== undefined,
-        ]
-    )
+    const [transcriptLoaded, additionalInfoLoaded] = useAppSelector((state) => [
+        state.student.transcript !== undefined,
+        state.student.additionalInfo !== undefined,
+    ])
     const dispatch = useAppDispatch()
     const transcriptInput = useRef<HTMLInputElement>(null)
     const studentDataInput = useRef<HTMLInputElement>(null)
@@ -51,16 +48,6 @@ export default function Home() {
                     <Navigate to={'/additionalInfo'} />
                 )
             ) : undefined}
-
-            <Backdrop
-                sx={{
-                    color: '#fff',
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                }}
-                open={loading}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
 
             <Grid container spacing={4}>
                 <Grid item>

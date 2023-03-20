@@ -1,7 +1,7 @@
 import { Save } from '@mui/icons-material'
 import { Box, Fab } from '@mui/material'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { addNotification } from '../features/notification'
+import { useAppSelector } from '../app/hooks'
+import { useSnackbar } from 'notistack'
 import { SaveData } from '../features/saveData'
 import version from '../version'
 
@@ -10,17 +10,14 @@ export default function SaveStudentButton() {
         transcript: state.student.transcript,
         additionalInfo: state.student.additionalInfo,
     }))
-    const dispatch = useAppDispatch()
+    const { enqueueSnackbar } = useSnackbar()
 
     const downloadJson = () => {
         if (!transcript || !additionalInfo) {
-            dispatch(
-                addNotification({
-                    type: 'error',
-                    message: 'Failed to save partal student',
-                    timeout: undefined,
-                })
-            )
+            enqueueSnackbar('Failed to save partal student', {
+                preventDuplicate: true,
+                variant: 'error',
+            })
             return
         }
         const saveData: SaveData = { version, transcript, additionalInfo }

@@ -3,7 +3,7 @@ import { majorVersion, minorVersion, patchVersion } from '../version'
 import { SaveData } from './saveData'
 
 const importSave = createAsyncThunk(
-    'student/importSave',
+    'importSave',
     async (file: Blob): Promise<SaveData> => {
         const saveData = JSON.parse(await file.text()) as SaveData
         if (!saveData.additionalInfo || !saveData.transcript) {
