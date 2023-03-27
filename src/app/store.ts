@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import devSlice from '../features/dev/devSlice'
+import degreeRequirements from '../features/degreeRequirements'
 import global from '../features/global'
 import student from '../features/student'
 // import { createLogger } from 'redux-logger'
@@ -9,6 +10,7 @@ export const store = configureStore({
         dev: devSlice,
         student,
         global,
+        degreeRequirements,
     },
     // Uncomment for dataflow logging
     // middleware: (getDefaultMiddleware) =>

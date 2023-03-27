@@ -1,4 +1,4 @@
-import { DegreeRequirements } from './app/degreeRequirements/model'
+import { DegreeRequirements } from './features/degreeRequirements/model'
 
 export {}
 declare global {
