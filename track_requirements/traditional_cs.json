@@ -1,0 +1,54 @@
+{
+    "name": "Traditional Computer Science",
+    "major": "Computer Science",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Design and Analysis of Computer Algorithms",
+                    "prefix": "CS",
+                    "number": 6363
+                },
+                {
+                    "name": "Advanced Operating Systems",
+                    "prefix": "CS",
+                    "number": 6378
+                },
+                {
+                    "name": "Advanced Computer Networks",
+                    "prefix": "CS",
+                    "number": 6390
+                }
+            ],
+            "groups": [
+                {
+                    "countRequired": 2,
+                    "classes": [
+                        {
+                            "name": "Compiler Construction",
+                            "prefix": "CS",
+                            "number": 6353
+                        },
+                        {
+                            "name": "Natural Language Processing",
+                            "prefix": "CS",
+                            "number": 6320
+                        },
+                        {
+                            "name": "Database Design",
+                            "prefix": "CS",
+                            "number": 6360
+                        },
+                        {
+                            "name": "Advanced Programming Languages",
+                            "prefix": "CS",
+                            "number": 6371
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

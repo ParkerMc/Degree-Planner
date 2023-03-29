@@ -1,0 +1,64 @@
+{
+    "name": "Data Science",
+    "major": "Computer Science",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Statistical Methods for Data Sciences",
+                    "prefix": "CS",
+                    "number": 6313
+                },
+                {
+                    "name": "Big Data Management and Analytics",
+                    "prefix": "CS",
+                    "number": 6350
+                },
+                {
+                    "name": "Design and Analysis of Computer Algorithms",
+                    "prefix": "CS",
+                    "number": 6363
+                },
+                {
+                    "name": "Machine Learning",
+                    "prefix": "CS",
+                    "number": 6375
+                }
+            ],
+            "groups": [
+                {
+                    "countRequired": 1,
+                    "classes": [
+                        {
+                            "name": "Social Network Analytics",
+                            "prefix": "CS",
+                            "number": 6301
+                        },
+                        {
+                            "name": "Natural Language Processing",
+                            "prefix": "CS",
+                            "number": 6320
+                        },
+                        {
+                            "name": "Video Analytics",
+                            "prefix": "CS",
+                            "number": 6327
+                        },
+                        {
+                            "name": "Statistics for Machine Learning",
+                            "prefix": "CS",
+                            "number": 6347
+                        },
+                        {
+                            "name": "Database Design",
+                            "prefix": "CS",
+                            "number": 6360
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

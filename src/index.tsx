@@ -16,7 +16,7 @@ import DegreePlan from './pages/DegreePlan'
 import Audit from './pages/Audit'
 import NotificationCloseButton from './components/NotificationCloseButton'
 import LoadingOverlay from './components/LoadingOverlay'
-import { loadDegreeRequirements } from './app/degreeRequirements'
+import loadRequirements from './features/trackRequirements/loadRequirements'
 
 const router = createHashRouter([
     {
@@ -51,7 +51,7 @@ const darkTheme = createTheme({
     },
 })
 
-loadDegreeRequirements()
+store.dispatch(loadRequirements())
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(

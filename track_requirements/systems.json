@@ -1,0 +1,64 @@
+{
+    "name": "Systems",
+    "major": "Computer Science",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Computer Architecture",
+                    "prefix": "CS",
+                    "number": 6304
+                },
+                {
+                    "name": "Design and Analysis of Computer Algorithms",
+                    "prefix": "CS",
+                    "number": 6363
+                },
+                {
+                    "name": "Advanced Operating Systems",
+                    "prefix": "CS",
+                    "number": 6378
+                },
+                {
+                    "name": "Real-Time Systems",
+                    "prefix": "CS",
+                    "number": 6396
+                }
+            ],
+            "groups": [
+                {
+                    "countRequired": 1,
+                    "classes": [
+                        {
+                            "name": "Network Security",
+                            "prefix": "CS",
+                            "number": 6349
+                        },
+                        {
+                            "name": "Parallel Processing",
+                            "prefix": "CS",
+                            "number": 6376
+                        },
+                        {
+                            "name": "Distributed Computing",
+                            "prefix": "CS",
+                            "number": 6380
+                        },
+                        {
+                            "name": "Synthesis and Opt. of High-Perf. Systems",
+                            "prefix": "CS",
+                            "number": 6397
+                        },
+                        {
+                            "name": "Parallel Architectures and Systems",
+                            "prefix": "CS",
+                            "number": 6399
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
