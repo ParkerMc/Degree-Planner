@@ -7,14 +7,28 @@ import {
     FormGroup,
     TextField,
 } from '@mui/material'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import setupDegreePlan from '../features/degreePlan/setupDegreePlan'
+import { setFastTrack, setThesis, setTrack } from '../features/student'
 
 export default function AdditionalInformation() {
-    const [track, setTrack] = useState<number>()
-    const [fastTrack, setFastTrack] = useState(false)
-    const [pursuingThesis, setPursuingThesis] = useState(false)
-    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const [
+        degreePlanLoaded,
+        requirements,
+        major,
+        track,
+        fastTrack,
+        pursuingThesis,
+    ] = useAppSelector((state) => [
+        state.degreePlan.loaded,
+        state.trackRequirements,
+        state.student.transcript?.major ?? '',
+        state.student.additionalInfo.track,
+        state.student.additionalInfo.fastTrack,
+        state.student.additionalInfo.thesis,
+    ])
 
     const Container = styled.div`
         display: flex;
@@ -23,22 +37,16 @@ export default function AdditionalInformation() {
         align-items: center;
     `
 
-    const tracks = [
-        'Cyber Security',
-        'Data Science',
-        'Intelligent Systems',
-        'Interactive Computing',
-        'Networks and Telecommunications',
-        'Systems',
-        'Traditional Computer Science',
-        'Software Engineering',
-    ].map((label, id) => ({
-        label,
-        id,
-    }))
+    const tracks = Object.keys(requirements)
+        .map((key) => requirements[key])
+        .filter((r) => r.major === major)
+        .map((r) => ({
+            label: r.name,
+        }))
 
     return (
         <Container>
+            {degreePlanLoaded ? <Navigate to={'/degreePlan'} /> : null}
             <Autocomplete
                 openOnFocus
                 options={tracks}
@@ -46,10 +54,13 @@ export default function AdditionalInformation() {
                 renderInput={(params) => (
                     <TextField {...params} label="Track" />
                 )}
-                value={track !== undefined ? tracks[track] : undefined}
+                value={
+                    track !== undefined
+                        ? tracks.find((t) => t.label === track)
+                        : undefined
+                }
                 onChange={(_, value) => {
-                    setTrack(value?.id)
-                    console.log(value)
+                    dispatch(setTrack(value?.label ?? ''))
                 }}
             />
             <FormGroup>
@@ -57,7 +68,9 @@ export default function AdditionalInformation() {
                     control={
                         <Checkbox
                             checked={fastTrack}
-                            onChange={(e) => setFastTrack(e.target.checked)}
+                            onChange={(e) =>
+                                dispatch(setFastTrack(e.target.checked))
+                            }
                         />
                     }
                     label="Fast Track"
@@ -67,7 +80,7 @@ export default function AdditionalInformation() {
                         <Checkbox
                             checked={pursuingThesis}
                             onChange={(e) =>
-                                setPursuingThesis(e.target.checked)
+                                dispatch(setThesis(e.target.checked))
                             }
                         />
                     }
@@ -77,7 +90,7 @@ export default function AdditionalInformation() {
             <Button
                 disabled={track === undefined}
                 variant="contained"
-                onClick={() => navigate('/degreePlan')}
+                onClick={() => dispatch(setupDegreePlan(track))}
             >
                 Continue
             </Button>

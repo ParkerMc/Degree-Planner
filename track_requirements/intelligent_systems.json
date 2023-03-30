@@ -1,0 +1,49 @@
+{
+    "name": "Intelligent Systems",
+    "major": "Computer Science",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Natural Language Processing",
+                    "prefix": "CS",
+                    "number": 6320
+                },
+                {
+                    "name": "Design and Analysis of Computer Algorithms",
+                    "prefix": "CS",
+                    "number": 6363
+                },
+                {
+                    "name": "Artificial Intelligence",
+                    "prefix": "CS",
+                    "number": 6364
+                },
+                {
+                    "name": "Machine Learning",
+                    "prefix": "CS",
+                    "number": 6375
+                }
+            ],
+            "groups": [
+                {
+                    "countRequired": 1,
+                    "classes": [
+                        {
+                            "name": "Advanced Operating Systems",
+                            "prefix": "CS",
+                            "number": 6378
+                        },
+                        {
+                            "name": "Database Design",
+                            "prefix": "CS",
+                            "number": 6360
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

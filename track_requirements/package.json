@@ -1,6 +1,6 @@
 {
-    "name": "degree_requirements",
-    "version": "1.0.0",
+    "name": "track_requirements",
+    "version": "1.0.1",
     "description": "",
     "main": "index.js",
     "scripts": {

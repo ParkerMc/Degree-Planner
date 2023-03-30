@@ -1,0 +1,54 @@
+{
+    "name": "Interactive Computing",
+    "major": "Computer Science",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Human Computer Interaction",
+                    "prefix": "CS",
+                    "number": 6326
+                },
+                {
+                    "name": "Design and Analysis of Computer Algorithms",
+                    "prefix": "CS",
+                    "number": 6363
+                }
+            ],
+            "groups": [
+                {
+                    "countRequired": 3,
+                    "classes": [
+                        {
+                            "name": "Computer Animation and Gaming",
+                            "prefix": "CS",
+                            "number": 6323
+                        },
+                        {
+                            "name": "Modeling and Simulation",
+                            "prefix": "CS",
+                            "number": 6328
+                        },
+                        {
+                            "name": "Multimedia Systems",
+                            "prefix": "CS",
+                            "number": 6331
+                        },
+                        {
+                            "name": "Virtual Reality",
+                            "prefix": "CS",
+                            "number": 6334
+                        },
+                        {
+                            "name": "Computer Graphics",
+                            "prefix": "CS",
+                            "number": 6366
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

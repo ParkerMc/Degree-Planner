@@ -1,0 +1,37 @@
+{
+    "name": "Networks and Telecommunication",
+    "major": "Computer Science",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Perf. of Computer Systems and Networks",
+                    "prefix": "CS",
+                    "number": 6352
+                },
+                {
+                    "name": "Design and Analysis of Computer Algorithms",
+                    "prefix": "CS",
+                    "number": 6363
+                },
+                {
+                    "name": "Advanced Operating Systems",
+                    "prefix": "CS",
+                    "number": 6378
+                },
+                {
+                    "name": "Algorithmic Aspects of Telecomm. Networks",
+                    "prefix": "CS",
+                    "number": 6385
+                },
+                {
+                    "name": "Advanced Computer Networks",
+                    "prefix": "CS",
+                    "number": 6390
+                }
+            ]
+        }
+    }
+}

@@ -6,10 +6,13 @@ import { SaveData } from '../features/saveData'
 import version from '../version'
 
 export default function SaveStudentButton() {
-    const { transcript, additionalInfo } = useAppSelector((state) => ({
-        transcript: state.student.transcript,
-        additionalInfo: state.student.additionalInfo,
-    }))
+    const { transcript, additionalInfo, degreePlan } = useAppSelector(
+        (state) => ({
+            transcript: state.student.transcript,
+            additionalInfo: state.student.additionalInfo,
+            degreePlan: state.degreePlan,
+        })
+    )
     const { enqueueSnackbar } = useSnackbar()
 
     const downloadJson = () => {
@@ -20,7 +23,12 @@ export default function SaveStudentButton() {
             })
             return
         }
-        const saveData: SaveData = { version, transcript, additionalInfo }
+        const saveData: SaveData = {
+            version,
+            transcript,
+            additionalInfo,
+            degreePlan,
+        }
         const element = document.createElement('a')
         const file = new Blob([JSON.stringify(saveData)], {
             type: 'application/json',

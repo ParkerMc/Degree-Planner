@@ -1,0 +1,37 @@
+{
+    "name": "Software Engineering",
+    "major": "Software Engineering",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Object Oriented Software Engineering",
+                    "prefix": "SE",
+                    "number": 6329
+                },
+                {
+                    "name": "Advanced Requirements Engineering",
+                    "prefix": "SE",
+                    "number": 6361
+                },
+                {
+                    "name": "Adv Softwr Archtctr & Design",
+                    "prefix": "SE",
+                    "number": 6362
+                },
+                {
+                    "name": "Software Testing, Validation, Verification",
+                    "prefix": "SE",
+                    "number": 6367
+                },
+                {
+                    "name": "Advanced Software Engineering Project",
+                    "prefix": "SE",
+                    "number": 6387
+                }
+            ]
+        }
+    }
+}

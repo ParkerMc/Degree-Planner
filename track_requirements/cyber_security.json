@@ -1,0 +1,54 @@
+{
+    "name": "Cyber Security",
+    "major": "Computer Science",
+    "requirements": {
+        "core": {
+            "name": "Core Courses",
+            "gpaRequired": 3.19,
+            "classes": [
+                {
+                    "name": "Information Security",
+                    "prefix": "CS",
+                    "number": 6324
+                },
+                {
+                    "name": "Design and Analysis of Computer Algorithms",
+                    "prefix": "CS",
+                    "number": 6363
+                },
+                {
+                    "name": "Advanced Operating Systems",
+                    "prefix": "CS",
+                    "number": 6378
+                }
+            ],
+            "groups": [
+                {
+                    "countRequired": 2,
+                    "classes": [
+                        {
+                            "name": "System Security & Malicious Code Analysis",
+                            "prefix": "CS",
+                            "number": 6332
+                        },
+                        {
+                            "name": "Data and Applications Security",
+                            "prefix": "CS",
+                            "number": 6348
+                        },
+                        {
+                            "name": "Network Security",
+                            "prefix": "CS",
+                            "number": 6349
+                        },
+                        {
+                            "name": "Introduction To Cryptography",
+                            "prefix": "CS",
+                            "number": 6377
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -1,10 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { Semester, TranscriptData } from './model'
+import { Semester, TranscriptDataResponse } from './model'
 import { TextItem as PdfTextItem } from 'pdfjs-dist/types/src/display/api'
+import { RootState } from '../../app/store'
 
 const importTranscript = createAsyncThunk(
     'student/importTranscript',
-    async (file: Blob): Promise<TranscriptData> => {
+    async (file: Blob, { getState }): Promise<TranscriptDataResponse> => {
         // We import this here so that it's only loaded during client-side rendering.
         const pdfjs = await import('pdfjs-dist')
         pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js'
@@ -46,13 +47,25 @@ const importTranscript = createAsyncThunk(
 
         // Example below of what to do when you need to present an error back to the user
         // throw new Error('Not a transcript')
-
-        return {
+        let transcript = {
             name: 'Nick Reisinger',
             id: '2021511791',
             major: 'Computer Science',
             semesterAdmitted: { semester: Semester.Fall, year: 2020 },
             classes: [],
+        }
+
+        let requirements = (getState() as RootState).trackRequirements
+        let requirementsOptions = Object.keys(requirements)
+            .map((key) => requirements[key])
+            .filter((r) => r.major === transcript.major)
+
+        return {
+            transcript,
+            track:
+                requirementsOptions.length === 1
+                    ? requirementsOptions[0].name
+                    : '',
         }
     }
 )
