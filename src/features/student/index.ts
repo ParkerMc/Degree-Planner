@@ -1,18 +1,35 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import importSave from '../importSave'
 import importTranscript from './importTranscript'
 import { StudentState } from './model'
 
-const initialState: StudentState = {}
+const initialState: StudentState = {
+    additionalInfo: {
+        track: '',
+        fastTrack: false,
+        thesis: false,
+    },
+}
 
 const studentSlice = createSlice({
     name: 'student',
     initialState,
-    reducers: {},
+    reducers: {
+        setTrack: (state, action: PayloadAction<string>) => {
+            state.additionalInfo.track = action.payload
+        },
+        setFastTrack: (state, action: PayloadAction<boolean>) => {
+            state.additionalInfo.fastTrack = action.payload
+        },
+        setThesis: (state, action: PayloadAction<boolean>) => {
+            state.additionalInfo.thesis = action.payload
+        },
+    },
     extraReducers: (builder) =>
         builder
             .addCase(importTranscript.fulfilled, (state, action) => {
-                state.transcript = action.payload
+                state.transcript = action.payload.transcript
+                state.additionalInfo.track = action.payload.track
             })
             .addCase(importSave.fulfilled, (state, action) => {
                 state.transcript = action.payload.transcript
@@ -21,3 +38,5 @@ const studentSlice = createSlice({
 })
 
 export default studentSlice.reducer
+
+export const { setTrack, setFastTrack, setThesis } = studentSlice.actions

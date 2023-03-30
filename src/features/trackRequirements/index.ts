@@ -14,6 +14,7 @@ const trackRequirementsSlice = createSlice({
             action.payload.forEach(
                 (requirements) => (state[requirements.name] = requirements)
             )
+            return state
         }),
 })
 

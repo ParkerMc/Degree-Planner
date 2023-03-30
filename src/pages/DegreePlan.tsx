@@ -49,7 +49,7 @@ export default function DegreePlan() {
                 ))}
             </Box>
             <Grid container spacing={2}>
-                {/* TODO add reset button */}
+                {/* TODO add reset button(Also to additional info page) and update transcript button */}
                 <Grid item>
                     <SaveStudentButton />
                 </Grid>
