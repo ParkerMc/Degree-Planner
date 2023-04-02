@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Semester, TranscriptDataResponse } from './model'
 import { TextItem as PdfTextItem } from 'pdfjs-dist/types/src/display/api'
 import { RootState } from '../../app/store'
+import { TranscriptData, SemesterYear, Class } from './model'
 
 const importTranscript = createAsyncThunk(
     'student/importTranscript',
@@ -41,9 +42,85 @@ const importTranscript = createAsyncThunk(
                 )
             )
         }
-
-        // TODO do stuff here
         console.log(pages)
+
+        const student: TranscriptData = {
+            name: '',
+            id: '',
+            major: '',
+            semesterAdmitted: { semester: Semester.None, year: 1 },
+            classes: [],
+        }
+        let allClasses: string[] = ['CS', 'EE', 'ECS', 'ECSC', 'SE', 'MATH']
+        let seasons: string[] = ['Fall', 'Spring', 'Summer']
+        let currentYearMonth: string[] = []
+
+        for (let j = 0; j < pages.length; j++) {
+            for (let k = 0; k < pages[j].length; k++) {
+                // get the year and semester and if one isnt set for admission add one
+                if (seasons.indexOf(pages[j][k][0].split(' ', 2)[1]) > -1) {
+                    currentYearMonth = pages[j][k][0].split(' ', 2)
+                    if (student.semesterAdmitted.year == 1) {
+                        student.semesterAdmitted.year = +currentYearMonth[0]
+                        student.semesterAdmitted.semester =
+                            currentYearMonth[1] as Semester
+                    }
+                }
+
+                // add student name
+                if (pages[j][k][0] == 'Name:') {
+                    student.name = pages[j][k][1]
+                }
+
+                //add id
+                if (pages[j][k][1] == 'ID:') {
+                    student.id = pages[j][k][2]
+                }
+
+                if (pages[j][k].length > 1) {
+                    if (pages[j][k][1].includes('Major')) {
+                        student.major = pages[j][k][1]
+                    }
+                }
+
+                // add classes to classes
+                if (allClasses.indexOf(pages[j][k][0]) > -1) {
+                    console.log(pages[j][k])
+                    if (pages[j][k].length > 6) {
+                        let tempClass: Class = {
+                            prefix: pages[j][k][0],
+                            course: +pages[j][k][1],
+                            name: pages[j][k][2],
+                            semester: {
+                                semester: currentYearMonth[1] as Semester,
+                                year: +currentYearMonth[0],
+                            },
+                            grade: pages[j][k][5],
+                            attempted: +pages[j][k][3],
+                            earned: +pages[j][k][4],
+                            points: +pages[j][k][6],
+                        }
+                        student.classes.push(tempClass)
+                    } else {
+                        let tempClass: Class = {
+                            prefix: pages[j][k][0],
+                            course: +pages[j][k][1],
+                            name: pages[j][k][2],
+                            semester: {
+                                semester: currentYearMonth[1] as Semester,
+                                year: +currentYearMonth[0],
+                            },
+                            grade: 'N/A',
+                            attempted: +pages[j][k][3],
+                            earned: 0,
+                            points: 0,
+                        }
+                        student.classes.push(tempClass)
+                    }
+                }
+            }
+        }
+        console.log(student)
 
         // Example below of what to do when you need to present an error back to the user
         // throw new Error('Not a transcript')
