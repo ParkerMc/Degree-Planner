@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { Semester, TranscriptDataResponse } from './model'
+import { Semester, SemesterYear, TranscriptDataResponse } from './model'
 import { TextItem as PdfTextItem } from 'pdfjs-dist/types/src/display/api'
 import { RootState } from '../../app/store'
-import { TranscriptData, SemesterYear, Class } from './model'
+import { Class } from './model'
 
 const importTranscript = createAsyncThunk(
     'student/importTranscript',
@@ -24,9 +24,10 @@ const importTranscript = createAsyncThunk(
             const pageRows = textItems
                 .filter((element) => element.str.trim() !== '')
                 .reduce((tmpRows, element) => {
-                    const group = tmpRows[element.transform[5]] ?? []
+                    const group =
+                        tmpRows[Math.floor(element.transform[5])] ?? []
                     group.push(element)
-                    tmpRows[element.transform[5]] = group
+                    tmpRows[Math.floor(element.transform[5])] = group
                     return tmpRows
                 }, {} as { [x: number]: PdfTextItem[] })
 
@@ -42,94 +43,127 @@ const importTranscript = createAsyncThunk(
                 )
             )
         }
-        console.log(pages)
 
-        const student: TranscriptData = {
-            name: '',
-            id: '',
-            major: '',
-            semesterAdmitted: { semester: Semester.None, year: 1 },
-            classes: [],
+        // Load info from first page
+        const nameRowI = pages[0].findIndex((row) => row[0] === 'Name:')
+        if (nameRowI < 0) {
+            throw new Error('Failed to find name')
         }
-        let allClasses: string[] = ['CS', 'EE', 'ECS', 'ECSC', 'SE', 'MATH']
-        let seasons: string[] = ['Fall', 'Spring', 'Summer']
-        let currentYearMonth: string[] = []
 
-        for (let j = 0; j < pages.length; j++) {
-            for (let k = 0; k < pages[j].length; k++) {
-                // get the year and semester and if one isnt set for admission add one
-                if (seasons.indexOf(pages[j][k][0].split(' ', 2)[1]) > -1) {
-                    currentYearMonth = pages[j][k][0].split(' ', 2)
-                    if (student.semesterAdmitted.year == 1) {
-                        student.semesterAdmitted.year = +currentYearMonth[0]
-                        student.semesterAdmitted.semester =
-                            currentYearMonth[1] as Semester
+        const idRowI = pages[0].findIndex((row) => row[0] === 'Student ID:')
+        if (idRowI < 0) {
+            throw new Error('Failed to find the student id')
+        }
+
+        // Concat pages together
+        const concatedPages = pages
+            .reduce((res, page) => res.concat(page.slice(0, -1)), [])
+            .filter((v) => v[0] !== pages[0][0][0] && v[0] !== pages[0][1][0])
+
+        // Find Masters Major
+        const majorRowI =
+            concatedPages.findLastIndex(
+                (row) => row[0] === 'Program:' && row[1] === 'Master'
+            ) + 2
+        if (
+            majorRowI < 2 ||
+            !concatedPages[majorRowI][
+                concatedPages[majorRowI].length - 1
+            ].endsWith(' Major')
+        ) {
+            throw new Error('Failed to find the Major name')
+        }
+        const major = concatedPages[majorRowI][
+            concatedPages[majorRowI].length - 1
+        ].slice(0, -6)
+
+        // Continue down for semester addmitted
+        const splitAddmitted = concatedPages[majorRowI + 3][0].split(' ')
+        if (
+            isNaN(+splitAddmitted[0]) ||
+            !Object.values(Semester).includes(splitAddmitted[1] as Semester)
+        ) {
+            throw new Error('Failed to find the Semester Addmitted')
+        }
+        const semesterAdmitted = {
+            semester: splitAddmitted[1] as Semester,
+            year: +splitAddmitted[0],
+        }
+
+        // Load classes
+        let courseGroupSemester: SemesterYear | undefined = undefined
+        const classRows = concatedPages
+            .map((row, i) => {
+                // Handle start and stop of course groups
+                if (row[0] === 'Course') {
+                    if (courseGroupSemester != null) {
+                        return null!
                     }
-                }
 
-                // add student name
-                if (pages[j][k][0] == 'Name:') {
-                    student.name = pages[j][k][1]
-                }
-
-                //add id
-                if (pages[j][k][1] == 'ID:') {
-                    student.id = pages[j][k][2]
-                }
-
-                if (pages[j][k].length > 1) {
-                    if (pages[j][k][1].includes('Major')) {
-                        student.major = pages[j][k][1]
+                    const splitSemeterYear = concatedPages[i - 1][0].split(' ')
+                    if (
+                        isNaN(+splitSemeterYear[0]) ||
+                        !Object.values(Semester).includes(
+                            splitSemeterYear[1] as Semester
+                        )
+                    ) {
+                        throw new Error(
+                            'Failed to find the Semester for course group'
+                        )
                     }
+                    courseGroupSemester = {
+                        semester: splitSemeterYear[1] as Semester,
+                        year: +splitSemeterYear[0],
+                    }
+                    return null!
+                }
+                if (row[0].includes('GPA')) {
+                    courseGroupSemester = undefined
+                    return null!
                 }
 
-                // add classes to classes
-                if (allClasses.indexOf(pages[j][k][0]) > -1) {
-                    console.log(pages[j][k])
-                    if (pages[j][k].length > 6) {
-                        let tempClass: Class = {
-                            prefix: pages[j][k][0],
-                            course: +pages[j][k][1],
-                            name: pages[j][k][2],
-                            semester: {
-                                semester: currentYearMonth[1] as Semester,
-                                year: +currentYearMonth[0],
-                            },
-                            grade: pages[j][k][5],
-                            attempted: +pages[j][k][3],
-                            earned: +pages[j][k][4],
-                            points: +pages[j][k][6],
-                        }
-                        student.classes.push(tempClass)
-                    } else {
-                        let tempClass: Class = {
-                            prefix: pages[j][k][0],
-                            course: +pages[j][k][1],
-                            name: pages[j][k][2],
-                            semester: {
-                                semester: currentYearMonth[1] as Semester,
-                                year: +currentYearMonth[0],
-                            },
-                            grade: 'N/A',
-                            attempted: +pages[j][k][3],
-                            earned: 0,
-                            points: 0,
-                        }
-                        student.classes.push(tempClass)
-                    }
+                // Skip middle rows
+                if (row.length < 7) {
+                    return null!
                 }
+
+                if (courseGroupSemester) {
+                    return { semester: courseGroupSemester, row }
+                }
+
+                return null!
+            })
+            .filter((tuple) => tuple)
+
+        const classes: { [key: string]: Class } = {}
+        classRows.forEach(({ semester, row }) => {
+            // TODO add grade
+            if (
+                isNaN(+row[1]) ||
+                isNaN(+row[3]) ||
+                isNaN(+row[4]) ||
+                isNaN(+row[6])
+            ) {
+                throw new Error(`Invalid class entry: ${row}`)
             }
-        }
-        console.log(student)
+            classes[`${row[0]} ${row[1]}`] = {
+                prefix: row[0],
+                course: +row[1],
+                name: row[2],
+                semester: semester,
+                grade: row[5],
+                attempted: +row[3],
+                earned: +row[4],
+                points: +row[6],
+            }
+        })
 
-        // Example below of what to do when you need to present an error back to the user
-        // throw new Error('Not a transcript')
         let transcript = {
-            name: 'Nick Reisinger',
-            id: '2021511791',
-            major: 'Computer Science',
-            semesterAdmitted: { semester: Semester.Fall, year: 2020 },
-            classes: [],
+            name: pages[0][nameRowI][1],
+            id: pages[0][idRowI][1],
+            major,
+            semesterAdmitted,
+            classes,
         }
 
         let requirements = (getState() as RootState).trackRequirements

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import importSave from '../importSave'
+import reset from '../reset'
 import importTranscript from './importTranscript'
 import { StudentState } from './model'
 
@@ -34,7 +35,8 @@ const studentSlice = createSlice({
             .addCase(importSave.fulfilled, (state, action) => {
                 state.transcript = action.payload.transcript
                 state.additionalInfo = action.payload.additionalInfo
-            }),
+            })
+            .addCase(reset, () => initialState),
 })
 
 export default studentSlice.reducer

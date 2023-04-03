@@ -1,27 +1,148 @@
-import { Box, Button, ButtonGroup, TextField } from '@mui/material'
+import {
+    Autocomplete,
+    Box,
+    Button,
+    ButtonGroup,
+    TextField,
+} from '@mui/material'
 import { useState } from 'react'
+import { Class, Semester } from '../features/student/model'
+import { RequiredCourse } from '../features/trackRequirements/model'
 
 interface DegreePlanRowProps {
     add?: boolean
-    value?: string
-    onChange?: (value?: string) => void
+    course?: RequiredCourse
+    transcriptClass?: Class
+    onCourseChange?: (value?: RequiredCourse) => void
     onAdd?: () => void
     onRemove?: () => void
 }
 
 export default function DegreePlanRow(props: DegreePlanRowProps) {
-    const [value, setValue] = useState(props.value)
+    const [courseName, setCourseName] = useState(
+        props.course?.name === '' ? undefined : props.course?.name
+    )
+
+    // TODO handle courseOptions when course is undefined
+    // TODO support changing transcriptClass
+    const courseOptions = [
+        {
+            label: `${props.course?.prefix} ${props.course?.number}`,
+        },
+    ]
+
+    const semesters = Object.values(Semester)
+        .filter((s) => s !== 'N/A')
+        .map((s) => ({
+            label: s,
+        }))
+
     return (
-        <Box>
+        <Box sx={{ display: 'flex', gap: '5px' }}>
+            {/* TODO allow freetext */}
+            <Autocomplete
+                options={courseOptions}
+                sx={{ width: 200 }}
+                renderInput={(params) => (
+                    <TextField {...params} label="Course Number" />
+                )}
+                value={props.course ? courseOptions[0] : undefined}
+                onChange={(_, value) => {
+                    if (!props.onCourseChange) {
+                        return
+                    }
+
+                    // TODO error check value
+                    if (!value) {
+                        props.onCourseChange(undefined)
+                        return
+                    }
+                    const split = value.label.split(' ')
+                    props.onCourseChange({
+                        prefix: split[0],
+                        number: +split[1],
+                        name: '',
+                    })
+                }}
+            />
             <TextField
-                label="Class"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
+                sx={{ width: 400 }}
+                label="Course Name"
+                value={courseName}
+                onChange={(e) => setCourseName(e.target.value)}
                 onBlur={(e) =>
-                    props.onChange && value !== props.value
-                        ? props.onChange(value)
-                        : null
+                    props.onCourseChange &&
+                    props.course &&
+                    props.course.name !== courseName
+                        ? props.onCourseChange({
+                              ...props.course,
+                              name: courseName ?? '',
+                          })
+                        : undefined
                 }
+            />
+            <Autocomplete
+                options={semesters}
+                sx={{ width: 200 }}
+                renderInput={(params) => (
+                    <TextField {...params} label="Semester" />
+                )}
+                value={
+                    props.transcriptClass
+                        ? { label: props.transcriptClass.semester.semester }
+                        : undefined
+                }
+                // onChange={(_, value) => {
+                //     if (!props.onCourseChange) {
+                //         return
+                //     }
+
+                //     // TODO error check value
+                //     if (!value) {
+                //         props.onCourseChange(undefined)
+                //         return
+                //     }
+                //     const split = value.label.split(' ')
+                //     props.onCourseChange({
+                //         prefix: split[0],
+                //         number: +split[1],
+                //         name: '',
+                //     })
+                // }}
+            />
+            <TextField
+                sx={{ width: 100 }}
+                label="Year"
+                type={'number'}
+                value={props.transcriptClass?.semester.year}
+                // onChange={(e) => setCourseName(e.target.value)}
+                // onBlur={(e) =>
+                //     props.onCourseChange &&
+                //     props.course &&
+                //     props.course.name !== courseName
+                //         ? props.onCourseChange({
+                //               ...props.course,
+                //               name: courseName ?? '',
+                //           })
+                //         : undefined
+                // }
+            />
+            {/* TODO change to autocomplete (maybe) */}
+            <TextField
+                sx={{ width: 100 }}
+                label="Grade"
+                value={props.transcriptClass?.grade}
+                // onChange={(e) => setCourseName(e.target.value)}
+                // onBlur={(e) =>
+                //     props.onCourseChange &&
+                //     props.course &&
+                //     props.course.name !== courseName
+                //         ? props.onCourseChange({
+                //               ...props.course,
+                //               name: courseName ?? '',
+                //           })
+                //         : undefined
+                // }
             />
             <ButtonGroup variant="contained">
                 <Button onClick={props.onRemove}>-</Button>

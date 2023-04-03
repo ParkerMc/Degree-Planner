@@ -5,5 +5,5 @@ export interface TranscriptData {
     id: string
     major: string
     semesterAdmitted: SemesterYear
-    classes: Class[]
+    classes: { [key: string]: Class }
 }

@@ -6,7 +6,13 @@ const setupDegreePlan = createAsyncThunk(
     'degreePlan/setup',
     async (trackName: string, { getState }): Promise<DegreePlanState> => {
         let state = getState() as RootState
+        let trackRequirements =
+            state.trackRequirements[state.student.additionalInfo.track]
+
         return {
+            major: trackRequirements.major,
+            track: trackRequirements.name,
+            requirements: trackRequirements.requirements,
             loaded: true,
         }
     }

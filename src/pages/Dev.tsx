@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { Box, Button, ButtonGroup, TextField } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
@@ -9,14 +8,15 @@ export default function Dev() {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
-    const Container = styled.div`
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    `
-
     return (
-        <Container>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
             <Box>
                 <h2>Pages:</h2>
                 <ButtonGroup variant="contained">
@@ -46,6 +46,6 @@ export default function Dev() {
                     <Button onClick={() => dispatch(increment())}>+</Button>
                 </ButtonGroup>
             </Box>
-        </Container>
+        </Box>
     )
 }

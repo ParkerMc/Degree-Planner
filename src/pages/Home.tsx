@@ -1,5 +1,4 @@
-import styled from '@emotion/styled'
-import { Fab, Grid } from '@mui/material'
+import { Box, Fab } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { ImportExport, Upload } from '@mui/icons-material'
@@ -17,13 +16,6 @@ export default function Home() {
     const transcriptInput = useRef<HTMLInputElement>(null)
     const studentDataInput = useRef<HTMLInputElement>(null)
 
-    const Container = styled.div`
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    `
-
     const studentDataFileSelected = (files: FileList | null) => {
         if (!files) {
             return
@@ -38,7 +30,14 @@ export default function Home() {
     }
 
     return (
-        <Container>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
             <h2>Select an option below</h2>
             <p>Or drop a file anywhere in this window(TODO)</p>
             {transcriptLoaded ? (
@@ -49,48 +48,50 @@ export default function Home() {
                 )
             ) : undefined}
 
-            <Grid container spacing={4}>
-                <Grid item>
-                    <input
-                        type="file"
-                        ref={studentDataInput}
-                        style={{ display: 'none' }}
-                        accept="application/JSON"
-                        onChange={(e) =>
-                            studentDataFileSelected(e.target.files)
-                        }
-                    />
-                    <Fab
-                        variant="extended"
-                        size="large"
-                        onClick={() => {
-                            studentDataInput.current?.click()
-                        }}
-                    >
-                        <Upload />
-                        Upload Student Data
-                    </Fab>
-                </Grid>
-                <Grid item>
-                    <input
-                        type="file"
-                        ref={transcriptInput}
-                        style={{ display: 'none' }}
-                        accept="application/pdf"
-                        onChange={(e) => transcriptFileSelected(e.target.files)}
-                    />
-                    <Fab
-                        variant="extended"
-                        size="large"
-                        onClick={() => {
-                            transcriptInput.current?.click()
-                        }}
-                    >
-                        <ImportExport />
-                        Import Transcript
-                    </Fab>
-                </Grid>
-            </Grid>
-        </Container>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignSelf: 'stretch',
+                    justifyContent: 'center',
+                    gap: '20px',
+                }}
+            >
+                <input
+                    type="file"
+                    ref={studentDataInput}
+                    style={{ display: 'none' }}
+                    accept="application/JSON"
+                    onChange={(e) => studentDataFileSelected(e.target.files)}
+                />
+                <Fab
+                    variant="extended"
+                    size="large"
+                    onClick={() => {
+                        studentDataInput.current?.click()
+                    }}
+                >
+                    <Upload />
+                    Upload Student Data
+                </Fab>
+
+                <input
+                    type="file"
+                    ref={transcriptInput}
+                    style={{ display: 'none' }}
+                    accept="application/pdf"
+                    onChange={(e) => transcriptFileSelected(e.target.files)}
+                />
+                <Fab
+                    variant="extended"
+                    size="large"
+                    onClick={() => {
+                        transcriptInput.current?.click()
+                    }}
+                >
+                    <ImportExport />
+                    Import Transcript
+                </Fab>
+            </Box>
+        </Box>
     )
 }

@@ -4,5 +4,5 @@ export interface RequirementGroup {
     name: string
     gpaRequired: number
     groups?: RequiredCourseGroup[]
-    classes?: RequiredCourse[]
+    classes?: (RequiredCourse | undefined)[]
 }

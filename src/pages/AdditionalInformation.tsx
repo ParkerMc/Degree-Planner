@@ -1,6 +1,6 @@
-import styled from '@emotion/styled'
 import {
     Autocomplete,
+    Box,
     Button,
     Checkbox,
     FormControlLabel,
@@ -11,10 +11,13 @@ import { Navigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import setupDegreePlan from '../features/degreePlan/setupDegreePlan'
 import { setFastTrack, setThesis, setTrack } from '../features/student'
+import ArrowBack from '@mui/icons-material/ArrowBack'
+import reset from '../features/reset'
 
 export default function AdditionalInformation() {
     const dispatch = useAppDispatch()
     const [
+        transcriptLoaded,
         degreePlanLoaded,
         requirements,
         major,
@@ -22,6 +25,7 @@ export default function AdditionalInformation() {
         fastTrack,
         pursuingThesis,
     ] = useAppSelector((state) => [
+        state.student.transcript !== undefined,
         state.degreePlan.loaded,
         state.trackRequirements,
         state.student.transcript?.major ?? '',
@@ -29,13 +33,6 @@ export default function AdditionalInformation() {
         state.student.additionalInfo.fastTrack,
         state.student.additionalInfo.thesis,
     ])
-
-    const Container = styled.div`
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    `
 
     const tracks = Object.keys(requirements)
         .map((key) => requirements[key])
@@ -45,8 +42,19 @@ export default function AdditionalInformation() {
         }))
 
     return (
-        <Container>
-            {degreePlanLoaded ? <Navigate to={'/degreePlan'} /> : null}
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            {degreePlanLoaded ? (
+                <Navigate to={'/degreePlan'} />
+            ) : !transcriptLoaded ? (
+                <Navigate to={'/'} />
+            ) : null}
             <Autocomplete
                 openOnFocus
                 options={tracks}
@@ -56,8 +64,8 @@ export default function AdditionalInformation() {
                 )}
                 value={
                     track !== undefined
-                        ? tracks.find((t) => t.label === track)
-                        : undefined
+                        ? tracks.find((t) => t.label === track) ?? null
+                        : null
                 }
                 onChange={(_, value) => {
                     dispatch(setTrack(value?.label ?? ''))
@@ -87,13 +95,29 @@ export default function AdditionalInformation() {
                     label="Pursuing Thesis"
                 />
             </FormGroup>
-            <Button
-                disabled={track === undefined}
-                variant="contained"
-                onClick={() => dispatch(setupDegreePlan(track))}
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignSelf: 'stretch',
+                    justifyContent: 'space-evenly',
+                    gap: '10px',
+                }}
             >
-                Continue
-            </Button>
-        </Container>
+                <Button
+                    disabled={track === undefined}
+                    variant="contained"
+                    onClick={() => dispatch(reset())}
+                >
+                    <ArrowBack /> Back
+                </Button>
+                <Button
+                    disabled={track === undefined}
+                    variant="contained"
+                    onClick={() => dispatch(setupDegreePlan(track))}
+                >
+                    Continue
+                </Button>
+            </Box>
+        </Box>
     )
 }
