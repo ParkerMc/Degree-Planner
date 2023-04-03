@@ -8,11 +8,14 @@ import reset from '../features/reset'
 
 export default function DegreePlan() {
     const dispatch = useAppDispatch()
-    const [degreePlan, studentName, classes] = useAppSelector((state) => [
-        state.degreePlan,
-        state.student.transcript?.name ?? '',
-        state.student.transcript?.classes ?? {},
-    ])
+    const [degreePlan, studentName, studentId, classes] = useAppSelector(
+        (state) => [
+            state.degreePlan,
+            state.student.transcript?.name,
+            state.student.transcript?.id,
+            state.student.transcript?.classes ?? {},
+        ]
+    )
 
     const groups = Object.keys(degreePlan.requirements).map((key, i) => {
         const requirementGroup = degreePlan.requirements[key]
@@ -102,8 +105,9 @@ export default function DegreePlan() {
         >
             {!degreePlan.loaded ? <Navigate to={'/'} /> : null}
             <h2>{studentName}</h2>
+            <h3>ID: {studentId}</h3>
             <h3>Major: {degreePlan.major}</h3>
-            <h3>Track: {degreePlan.major}</h3>
+            <h3>Track: {degreePlan.track}</h3>
             {groups}
             <Box
                 sx={{
