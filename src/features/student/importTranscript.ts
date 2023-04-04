@@ -50,10 +50,18 @@ const importTranscript = createAsyncThunk(
             throw new Error('Failed to find name')
         }
 
-        const idRowI = pages[0].findIndex((row) => row[0] === 'Student ID:')
+        const idRowI = pages[0].findIndex(
+            (row) =>
+                row[0] === 'Student ID:' ||
+                (row[0] === 'Student' && row[1] === 'ID:')
+        )
         if (idRowI < 0) {
             throw new Error('Failed to find the student id')
         }
+        const id =
+            pages[0][idRowI][1] === 'ID:'
+                ? pages[0][idRowI][2]
+                : pages[0][idRowI][1]
 
         // Concat pages together
         const concatedPages = pages
@@ -69,13 +77,13 @@ const importTranscript = createAsyncThunk(
             majorRowI < 2 ||
             !concatedPages[majorRowI][
                 concatedPages[majorRowI].length - 1
-            ].endsWith(' Major')
+            ].includes(' Major')
         ) {
             throw new Error('Failed to find the Major name')
         }
-        const major = concatedPages[majorRowI][
-            concatedPages[majorRowI].length - 1
-        ].slice(0, -6)
+        let major =
+            concatedPages[majorRowI][concatedPages[majorRowI].length - 1]
+        major = major.slice(0, major.indexOf(' Major'))
 
         // Continue down for semester addmitted
         const splitAddmitted = concatedPages[majorRowI + 3][0].split(' ')
@@ -160,7 +168,7 @@ const importTranscript = createAsyncThunk(
 
         let transcript = {
             name: pages[0][nameRowI][1],
-            id: pages[0][idRowI][1],
+            id,
             major,
             semesterAdmitted,
             classes,

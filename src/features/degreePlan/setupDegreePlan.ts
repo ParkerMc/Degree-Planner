@@ -13,6 +13,7 @@ const setupDegreePlan = createAsyncThunk(
             major: trackRequirements.major,
             track: trackRequirements.name,
             requirements: trackRequirements.requirements,
+            classOverrides: {},
             loaded: true,
         }
     }

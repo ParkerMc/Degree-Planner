@@ -8,6 +8,7 @@ const initialState: DegreePlanState = {
     major: '',
     track: '',
     requirements: {},
+    classOverrides: {},
     loaded: false,
 }
 
