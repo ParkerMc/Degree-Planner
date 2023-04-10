@@ -24,7 +24,7 @@ export default function DegreePlan() {
             return (
                 <DegreePlanRow
                     key={j}
-                    course={c}
+                    course={c ?? undefined}
                     transcriptClass={
                         degreePlan.classOverrides[classKey] ?? classes[classKey]
                     }
@@ -58,7 +58,7 @@ export default function DegreePlan() {
                 return (
                     <DegreePlanRow
                         key={k}
-                        course={c}
+                        course={c ?? undefined}
                         transcriptClass={
                             degreePlan.classOverrides[classKey] ??
                             classes[classKey]

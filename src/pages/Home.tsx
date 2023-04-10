@@ -6,7 +6,6 @@ import importTranscript from '../features/student/importTranscript'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import importSave from '../features/importSave'
 
-// TODO add drag and drop support
 export default function Home() {
     const [transcriptLoaded, degreePlanLoaded] = useAppSelector((state) => [
         state.student.transcript !== undefined,
@@ -39,7 +38,6 @@ export default function Home() {
             }}
         >
             <h2>Select an option below</h2>
-            <p>Or drop a file anywhere in this window(TODO)</p>
             {transcriptLoaded ? (
                 degreePlanLoaded ? (
                     <Navigate to={'/degreePlan'} />

@@ -32,6 +32,7 @@ export default function Print() {
 
     const Tr = styled.tr`
         border: 1.5px solid black;
+        height: 1.2em;
     `
     const Th = styled.th`
         padding: 0 0.5em 0 0.5em;
@@ -69,8 +70,8 @@ export default function Print() {
         align-items: flex-end;
         justify-content: flex-end;
     `
-    const formatClass = (c: RequiredCourse | undefined, i: number) => {
-        const classKey = `${c?.prefix} ${c?.number}`
+    const formatClass = (c: RequiredCourse | undefined | null, i: number) => {
+        const classKey = `${c?.prefix ?? ''} ${c?.number ?? ''}`
         const transcriptCourse =
             degreePlan.classOverrides[classKey] ??
             student.transcript?.classes[classKey]
@@ -101,36 +102,79 @@ export default function Print() {
             return (
                 <Fragment key={j}>
                     <Tr>
-                        <Th colSpan={5}>
-                            {g.countRequired} of the following Course
-                            {g.classes.length > 1 ? 's' : null}
-                        </Th>
+                        {requirementGroup.classes || j > 0 ? (
+                            <Th colSpan={5}>
+                                {g.title
+                                    ? g.title
+                                    : `${
+                                          g.countRequired
+                                      } of the following Course${
+                                          g.classes.length > 1 ? 's' : null
+                                      }`}
+                                {g.creditHours
+                                    ? ` (${g.creditHours} Credit Hours)`
+                                    : null}
+                            </Th>
+                        ) : (
+                            <Th colSpan={5}>
+                                <CourseGroupHeader>
+                                    <Header>
+                                        {g.countRequired}{' '}
+                                        {requirementGroup.name}
+                                    </Header>
+                                    {g.creditHours ? (
+                                        <Header>
+                                            ({g.creditHours} Credit Hours)
+                                        </Header>
+                                    ) : null}
+                                    {requirementGroup.gpaRequired ? (
+                                        <Header>
+                                            {requirementGroup.gpaRequired.toFixed(
+                                                2
+                                            )}{' '}
+                                            GPA Required
+                                        </Header>
+                                    ) : null}
+                                </CourseGroupHeader>
+                            </Th>
+                        )}
                     </Tr>
                     {groupClasses}
                 </Fragment>
             )
         })
+        let creditHours = requirementGroup.classes?.reduce(
+            (val, c) => val + +(c?.number.toString()[1] ?? '0'),
+            0
+        )
+        if (creditHours === 0) {
+            creditHours = undefined
+        }
         return (
             <Fragment key={i}>
-                <Tr>
-                    <Th colSpan={5}>
-                        <CourseGroupHeader>
-                            <Header>{requirementGroup.name}</Header>
-                            <Header>
-                                (
-                                {requirementGroup.classes?.reduce(
-                                    (val, c) =>
-                                        val + +(c?.number.toString()[1] ?? '0'),
-                                    0
-                                )}{' '}
-                                Credit Hours)
-                            </Header>
-                            <Header>
-                                {requirementGroup.gpaRequired} GPA Required
-                            </Header>
-                        </CourseGroupHeader>
-                    </Th>
-                </Tr>
+                {requirementGroup.classes ||
+                (requirementGroup.groups?.length ?? 0) === 0 ? (
+                    <Tr>
+                        <Th colSpan={5}>
+                            <CourseGroupHeader>
+                                <Header>{requirementGroup.name}</Header>
+                                {creditHours ? (
+                                    <Header>
+                                        ({creditHours} Credit Hours)
+                                    </Header>
+                                ) : null}
+                                {requirementGroup.gpaRequired ? (
+                                    <Header>
+                                        {requirementGroup.gpaRequired.toFixed(
+                                            2
+                                        )}{' '}
+                                        GPA Required
+                                    </Header>
+                                ) : null}
+                            </CourseGroupHeader>
+                        </Th>
+                    </Tr>
+                ) : null}
                 {classElements}
                 {classGroups}
             </Fragment>

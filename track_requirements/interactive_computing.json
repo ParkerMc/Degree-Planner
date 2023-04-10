@@ -49,6 +49,26 @@
                     ]
                 }
             ]
+        },
+        "electives": {
+            "gpaRequired": 3.0,
+            "name": "Approved 6000 Level Electives",
+            "groups": [
+                {
+                    "countRequired": 5,
+                    "creditHours": 15,
+                    "classes": [null, null, null, null, null]
+                },
+                {
+                    "title": "Additional Electives",
+                    "creditHours": 3,
+                    "classes": [null]
+                }
+            ]
+        },
+        "other": {
+            "name": "Other Requirements",
+            "classes": [null]
         }
     }
 }

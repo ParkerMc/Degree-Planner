@@ -49,6 +49,31 @@
                     ]
                 }
             ]
+        },
+        "electives": {
+            "gpaRequired": 3.0,
+            "name": "IA Approved 6000 Level Electives",
+            "groups": [
+                {
+                    "countRequired": 2,
+                    "creditHours": 6,
+                    "classes": [null, null]
+                }
+            ]
+        },
+        "CsElectives": {
+            "gpaRequired": 3.0,
+            "name": "CS Approved 6000 Level Electives",
+            "groups": [
+                {
+                    "creditHours": 12,
+                    "classes": [null, null, null, null]
+                }
+            ]
+        },
+        "other": {
+            "name": "Other Requirements",
+            "classes": [null]
         }
     }
 }
