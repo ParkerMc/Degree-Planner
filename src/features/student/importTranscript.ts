@@ -100,9 +100,18 @@ const importTranscript = createAsyncThunk(
 
         // Load classes
         let courseGroupSemester: SemesterYear | undefined = undefined
+        let transfer = false
+        let fastTrack = false
         const classRows = concatedPages
             .map((row, i) => {
                 // Handle start and stop of course groups
+                if (row[0].startsWith('Transfer Credit from')) {
+                    if (row[0].endsWith('Fast Track')) {
+                        fastTrack = true
+                    } else {
+                        transfer = true
+                    }
+                }
                 if (row[0] === 'Course') {
                     if (courseGroupSemester != null) {
                         return null!
@@ -127,6 +136,8 @@ const importTranscript = createAsyncThunk(
                 }
                 if (row[0].includes('GPA')) {
                     courseGroupSemester = undefined
+                    transfer = false
+                    fastTrack = false
                     return null!
                 }
 
@@ -136,7 +147,12 @@ const importTranscript = createAsyncThunk(
                 }
 
                 if (courseGroupSemester) {
-                    return { semester: courseGroupSemester, row }
+                    return {
+                        semester: courseGroupSemester,
+                        row,
+                        transfer,
+                        fastTrack,
+                    }
                 }
 
                 return null!
@@ -144,7 +160,7 @@ const importTranscript = createAsyncThunk(
             .filter((tuple) => tuple)
 
         const classes: { [key: string]: Class } = {}
-        classRows.forEach(({ semester, row }) => {
+        classRows.forEach(({ semester, row, transfer, fastTrack }) => {
             // TODO add grade
             if (
                 isNaN(+row[1]) ||
@@ -160,9 +176,8 @@ const importTranscript = createAsyncThunk(
                 name: row[2],
                 semester: semester,
                 grade: row[5],
-                attempted: +row[3],
-                earned: +row[4],
-                points: +row[6],
+                transfer,
+                fastTrack,
             }
         })
 
