@@ -57,18 +57,18 @@
                 {
                     "countRequired": 5,
                     "creditHours": 15,
-                    "classes": [null, null, null, null, null]
+                    "classes": []
                 },
                 {
                     "title": "Additional Electives",
                     "creditHours": 3,
-                    "classes": [null]
+                    "classes": []
                 }
             ]
         },
         "other": {
             "name": "Other Requirements",
-            "classes": [null]
+            "classes": []
         }
     }
 }
