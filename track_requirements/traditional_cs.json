@@ -57,44 +57,12 @@
                 {
                     "countRequired": 5,
                     "creditHours": 15,
-                    "classes": [
-                        {
-                            "name": "Object-Orient Ans & Des",
-                            "prefix": "CS",
-                            "number": 6359
-                        },
-                        {
-                            "name": "Artificial Intelligence",
-                            "prefix": "CS",
-                            "number": 6364
-                        },
-                        {
-                            "name": "Algorithmic Aspects/Telecom NT",
-                            "prefix": "CS",
-                            "number": 6385
-                        },
-                        {
-                            "name": "Web Programming Languages",
-                            "prefix": "CS",
-                            "number": 6314
-                        },
-                        {
-                            "name": "Big Data Management And Analysis",
-                            "prefix": "CS",
-                            "number": 6350
-                        }
-                    ]
+                    "classes": []
                 },
                 {
                     "title": "Additional Electives",
                     "creditHours": 3,
-                    "classes": [
-                        {
-                            "name": "Discrete Structures",
-                            "prefix": "CS",
-                            "number": 5333
-                        }
-                    ]
+                    "classes": []
                 }
             ]
         },
@@ -127,9 +95,14 @@
                     "number": 5348
                 },
                 {
-                    "name": "Probability & Statistics in CS",
+                    "name": "Automata Theory",
                     "prefix": "CS",
-                    "number": 3341
+                    "number": 5349
+                },
+                {
+                    "name": "Computer Networks",
+                    "prefix": "CS",
+                    "number": 5349
                 }
             ]
         }
