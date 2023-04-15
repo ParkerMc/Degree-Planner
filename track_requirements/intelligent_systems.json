@@ -52,7 +52,33 @@
                 {
                     "countRequired": 5,
                     "creditHours": 15,
-                    "classes": []
+                    "classes": [
+                        {
+                            "name": "Intro To Robot Manipulation and Navigation",
+                            "prefix": "CS",
+                            "number": 6301
+                        },
+                        {
+                            "name": "System Security & Malicious Code Analysis",
+                            "prefix": "CS",
+                            "number": 6332
+                        },
+                        {
+                            "name": "Statistical Methods Data Science",
+                            "prefix": "CS",
+                            "number": 6313
+                        },
+                        {
+                            "name": "Object-Oriented Analysis & Design",
+                            "prefix": "CS",
+                            "number": 6371
+                        },
+                        {
+                            "name": "Advanced Programming Languages",
+                            "prefix": "CS",
+                            "number": 6371
+                        }
+                    ]
                 },
                 {
                     "title": "Additional Electives",
@@ -61,9 +87,40 @@
                 }
             ]
         },
-        "other": {
-            "name": "Other Requirements",
-            "classes": []
+        "prerequisites": {
+            "name": "Admission Prerequisites",
+            "classes": [
+                {
+                    "name": "Computer Science I",
+                    "prefix": "CS",
+                    "number": 5303
+                },
+                {
+                    "name": "Computer Science II",
+                    "prefix": "CS",
+                    "number": 5330
+                },
+                {
+                    "name": "Discrete Structures",
+                    "prefix": "CS",
+                    "number": 5333
+                },
+                {
+                    "name": "Algorithm Analysis & Data Structures",
+                    "prefix": "CS",
+                    "number": 5343
+                },
+                {
+                    "name": "Operating System Concepts",
+                    "prefix": "CS",
+                    "number": 5348
+                },
+                {
+                    "name": "Probability & Statistics in CS",
+                    "prefix": "CS",
+                    "number": 3341
+                }
+            ]
         }
     }
 }

@@ -57,18 +57,81 @@
                 {
                     "countRequired": 5,
                     "creditHours": 15,
-                    "classes": []
+                    "classes": [
+                        {
+                            "name": "Object-Orient Ans & Des",
+                            "prefix": "CS",
+                            "number": 6359
+                        },
+                        {
+                            "name": "Artificial Intelligence",
+                            "prefix": "CS",
+                            "number": 6364
+                        },
+                        {
+                            "name": "Algorithmic Aspects/Telecom NT",
+                            "prefix": "CS",
+                            "number": 6385
+                        },
+                        {
+                            "name": "Web Programming Languages",
+                            "prefix": "CS",
+                            "number": 6314
+                        },
+                        {
+                            "name": "Big Data Management And Analysis",
+                            "prefix": "CS",
+                            "number": 6350
+                        }
+                    ]
                 },
                 {
                     "title": "Additional Electives",
                     "creditHours": 3,
-                    "classes": []
+                    "classes": [
+                        {
+                            "name": "Discrete Structures",
+                            "prefix": "CS",
+                            "number": 5333
+                        }
+                    ]
                 }
             ]
         },
-        "other": {
-            "name": "Other Requirements",
-            "classes": []
+        "prerequisites": {
+            "name": "Admission Prerequisites",
+            "classes": [
+                {
+                    "name": "Computer Science I",
+                    "prefix": "CS",
+                    "number": 5303
+                },
+                {
+                    "name": "Computer Science II",
+                    "prefix": "CS",
+                    "number": 5330
+                },
+                {
+                    "name": "Discrete Structures",
+                    "prefix": "CS",
+                    "number": 5333
+                },
+                {
+                    "name": "Algorithm Analysis & Data Structures",
+                    "prefix": "CS",
+                    "number": 5343
+                },
+                {
+                    "name": "Operating System Concepts",
+                    "prefix": "CS",
+                    "number": 5348
+                },
+                {
+                    "name": "Probability & Statistics in CS",
+                    "prefix": "CS",
+                    "number": 3341
+                }
+            ]
         }
     }
 }
