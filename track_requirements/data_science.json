@@ -68,6 +68,11 @@
                     "countRequired": 5,
                     "creditHours": 15,
                     "classes": []
+                },
+                {
+                    "title": "Additional Electives",
+                    "creditHours": 3,
+                    "classes": []
                 }
             ]
         },
