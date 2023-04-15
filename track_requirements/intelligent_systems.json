@@ -52,6 +52,7 @@
                 {
                     "countRequired": 5,
                     "creditHours": 15,
+
                     "classes": [
                         {
                             "name": "Intro To Robot Manipulation and Navigation",
@@ -79,6 +80,9 @@
                             "number": 6371
                         }
                     ]
+
+                    "classes": []
+
                 },
                 {
                     "title": "Additional Electives",
@@ -89,6 +93,7 @@
         },
         "other": {
             "name": "Other Requirements",
+
             "groups": []
         },
         "prerequisites": {

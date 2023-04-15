@@ -1,6 +1,9 @@
 import { RequiredCourse } from '.'
 
 export interface RequiredCourseGroup {
-    countRequired: number
-    classes: (RequiredCourse | undefined)[]
+    title?: string
+    countRequired?: number
+    creditHours?: number
+    classes: (RequiredCourse | undefined | null)[]
+    suggestedClasses?: (RequiredCourse | undefined | null)[]
 }

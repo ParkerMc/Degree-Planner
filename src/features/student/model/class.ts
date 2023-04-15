@@ -6,7 +6,6 @@ export interface Class {
     name: string
     semester: SemesterYear
     grade: string
-    attempted: number
-    earned: number
-    points: number
+    transfer: boolean
+    fastTrack: boolean
 }

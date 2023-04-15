@@ -2,7 +2,7 @@ import { RequiredCourse, RequiredCourseGroup } from '.'
 
 export interface RequirementGroup {
     name: string
-    gpaRequired: number
+    gpaRequired?: number
     groups?: RequiredCourseGroup[]
-    classes?: (RequiredCourse | undefined)[]
+    classes?: (RequiredCourse | undefined | null)[]
 }
