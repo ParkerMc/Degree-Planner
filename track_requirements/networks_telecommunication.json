@@ -32,6 +32,127 @@
                     "number": 6390
                 }
             ]
+        },
+        "electives": {
+            "gpaRequired": 3.0,
+            "name": "Approved 6000 Level Electives",
+            "groups": [
+                {
+                    "countRequired": 5,
+                    "creditHours": 15,
+                    "classes": [
+                        {
+                            "name": "Web Programming Language",
+                            "prefix": "CS",
+                            "number": 6314
+                        },
+                        {
+                            "name": "Artificial Intelligence",
+                            "prefix": "CS",
+                            "number": 6364
+                        },
+                        {
+                            "name": "Algorithmic Aspects/Telecom NT",
+                            "prefix": "CS",
+                            "number": 6385
+                        },
+                        {
+                            "name": "Devel/Secure Cloud Edge, IOT",
+                            "prefix": "CS",
+                            "number": 6301
+                        },
+                        {
+                            "name": "Natural Language Processing",
+                            "prefix": "CS",
+                            "number": 6320
+                        },
+                        {
+                            "name": "Object-Oriented Analys & Dsgn",
+                            "prefix": "CS",
+                            "number": 6359
+                        },
+                        {
+                            "name": "Network Security",
+                            "prefix": "CS",
+                            "number": 6349
+                        },
+                        {
+                            "name": "Real-Time Systems",
+                            "prefix": "CS",
+                            "number": 6396
+                        },
+                        {
+                            "name": "Sftwr Test/Validatn/Verificatn",
+                            "prefix": "CS",
+                            "number": 6367
+                        },
+                        {
+                            "name": "Database Design",
+                            "prefix": "CS",
+                            "number": 6360
+                        },
+                        {
+                            "name": "Implt Data St",
+                            "prefix": "CS",
+                            "number": 6301
+                        },
+                        {
+                            "name": "Virtual Reality",
+                            "prefix": "CS",
+                            "number": 6334
+                        }
+                    ]
+                },
+                {
+                    "title": "Additional Electives",
+                    "creditHours": 3,
+                    "classes": []
+                }
+            ]
+        },
+        "other": {
+            "name": "Other Requirements",
+            "classes": []
+        },
+        "prerequisites": {
+            "name": "Addmission Prerequisites",
+            "classes": [
+                {
+                    "name": "Computer Science I",
+                    "prefix": "CS",
+                    "number": 5303
+                },
+                {
+                    "name": "Computer Science II",
+                    "prefix": "CS",
+                    "number": 5330
+                },
+                {
+                    "name": "Discrete Structures",
+                    "prefix": "CS",
+                    "number": 5333
+                },
+                {
+                    "name": "Algorithm Analysis & Data Structures",
+                    "prefix": "CS",
+                    "number": 5343
+                },
+                {
+                    "name": "Operating System Concepts",
+                    "prefix": "CS",
+                    "number": 5348
+                },
+                {
+                    "name": "Automata Theory",
+                    "prefix": "CS",
+                    "number": 3349
+                },
+                {
+                    "name": "Computer Networks",
+                    "prefix": "CS",
+                    "number": 5390
+                }
+            ]
         }
     }
 }
