@@ -61,6 +61,10 @@
                 }
             ]
         },
+        "other": {
+            "name": "Other Requirements",
+            "classes": []
+        },
         "prerequisites": {
             "name": "Admission Prerequisites",
             "suggestedClasses": [
