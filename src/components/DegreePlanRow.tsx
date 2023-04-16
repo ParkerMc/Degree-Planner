@@ -8,13 +8,13 @@ import {
 import { useState } from 'react'
 import { Class, Semester } from '../features/student/model'
 import { RequiredCourse } from '../features/trackRequirements/model'
+import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
 
 interface DegreePlanRowProps {
-    add?: boolean
-    course?: RequiredCourse
+    course?: DegreePlanRequiredCourse
     transcriptClass?: Class
+    overrideClass?: Class
     onCourseChange?: (value?: RequiredCourse) => void
-    onAdd?: () => void
     onRemove?: () => void
 }
 
@@ -146,7 +146,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
             />
             <ButtonGroup variant="contained">
                 <Button onClick={props.onRemove}>-</Button>
-                {props.add ? <Button onClick={props.onAdd}>+</Button> : null}
+                {/* {props.add ? <Button onClick={props.onAdd}>+</Button> : null} */}
             </ButtonGroup>
         </Box>
     )

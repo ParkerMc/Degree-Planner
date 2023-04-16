@@ -19,51 +19,48 @@ export default function DegreePlan() {
 
     const groups = Object.keys(degreePlan.requirements).map((key, i) => {
         const requirementGroup = degreePlan.requirements[key]
-        const classElements = requirementGroup.classes?.map((c, j) => {
-            const classKey = `${c?.prefix} ${c?.number}`
-            return (
-                <DegreePlanRow
-                    key={j}
-                    course={c ?? undefined}
-                    transcriptClass={
-                        degreePlan.classOverrides[classKey] ?? classes[classKey]
-                    }
-                    add={j === requirementGroup.classes!.length - 1}
-                    // onChange={(v) => {
-                    //     setRows([
-                    //         ...rows.slice(0, i),
-                    //         v ?? '',
-                    //         ...rows.slice(i + 1),
-                    //     ])
-                    // }}
-                    // onAdd={() => {
-                    //     setRows([...rows, ''])
-                    // }}
-                    // onRemove={() => {
-                    //     if (rows.length > 1) {
-                    //         setRows([
-                    //             ...rows.slice(0, i),
-                    //             ...rows.slice(i + 1),
-                    //         ])
-                    //     } else {
-                    //         setRows([''])
-                    //     }
-                    // }}
-                />
-            )
-        })
+        let classElements = !requirementGroup.classes
+            ? undefined
+            : [...requirementGroup.classes, undefined].map((c, j) => {
+                  const classKey = `${c?.prefix} ${c?.number}`
+                  return (
+                      <DegreePlanRow
+                          key={j}
+                          course={c ?? undefined}
+                          overrideClass={degreePlan.classOverrides[classKey]}
+                          transcriptClass={classes[classKey]}
+                          // onChange={(v) => {
+                          //     setRows([
+                          //         ...rows.slice(0, i),
+                          //         v ?? '',
+                          //         ...rows.slice(i + 1),
+                          //     ])
+                          // }}
+                          // onAdd={() => {
+                          //     setRows([...rows, ''])
+                          // }}
+                          // onRemove={() => {
+                          //     if (rows.length > 1) {
+                          //         setRows([
+                          //             ...rows.slice(0, i),
+                          //             ...rows.slice(i + 1),
+                          //         ])
+                          //     } else {
+                          //         setRows([''])
+                          //     }
+                          // }}
+                      />
+                  )
+              })
         const classGroups = requirementGroup.groups?.map((g, j) => {
-            const groupClasses = g.classes.map((c, k) => {
+            const groupClasses = [...g.classes, undefined].map((c, k) => {
                 const classKey = `${c?.prefix} ${c?.number}`
                 return (
                     <DegreePlanRow
                         key={k}
                         course={c ?? undefined}
-                        transcriptClass={
-                            degreePlan.classOverrides[classKey] ??
-                            classes[classKey]
-                        }
-                        add={k === g.classes.length - 1}
+                        overrideClass={degreePlan.classOverrides[classKey]}
+                        transcriptClass={classes[classKey]}
                         // onChange={(v) => {
                         //     setRows([
                         //         ...rows.slice(0, i),

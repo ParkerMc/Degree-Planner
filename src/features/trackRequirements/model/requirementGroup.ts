@@ -1,8 +1,8 @@
-import { RequiredCourse, RequiredCourseGroup } from '.'
+import { RequiredCourseGroup } from '.'
 
-export interface RequirementGroup {
+export interface RequirementGroup<T> {
     name: string
     gpaRequired?: number
-    groups?: RequiredCourseGroup[]
-    classes?: (RequiredCourse | undefined | null)[]
+    groups?: RequiredCourseGroup<T>[]
+    classes?: (T | undefined)[]
 }

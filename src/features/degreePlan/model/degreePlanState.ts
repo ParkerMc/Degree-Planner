@@ -1,10 +1,11 @@
 import { Class } from '../../student/model'
 import { RequirementGroup } from '../../trackRequirements/model'
+import { DegreePlanRequiredCourse } from './degreePlanRequiredCourse'
 
 export interface DegreePlanState {
     major: string
     track: string
-    requirements: { [key: string]: RequirementGroup }
+    requirements: { [key: string]: RequirementGroup<DegreePlanRequiredCourse> }
     classOverrides: { [key: string]: Class }
     loaded: boolean
 }
