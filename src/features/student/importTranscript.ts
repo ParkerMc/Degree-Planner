@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Semester, SemesterYear, TranscriptDataResponse } from './model'
 import { TextItem as PdfTextItem } from 'pdfjs-dist/types/src/display/api'
 import { RootState } from '../../app/store'
-import { Class } from './model'
+import { Class, getGPA } from './model'
 
 const importTranscript = createAsyncThunk(
     'student/importTranscript',
@@ -141,6 +141,14 @@ const importTranscript = createAsyncThunk(
                     return null!
                 }
 
+                if (courseGroupSemester && row.length === 6) {
+                    return {
+                        semester: courseGroupSemester,
+                        row,
+                        transfer,
+                        fastTrack,
+                    }
+                }
                 // Skip middle rows
                 if (row.length < 7) {
                     return null!
@@ -158,26 +166,40 @@ const importTranscript = createAsyncThunk(
                 return null!
             })
             .filter((tuple) => tuple)
-
         const classes: { [key: string]: Class } = {}
         classRows.forEach(({ semester, row, transfer, fastTrack }) => {
             // TODO add grade
-            if (
-                isNaN(+row[1]) ||
-                isNaN(+row[3]) ||
-                isNaN(+row[4]) ||
-                isNaN(+row[6])
-            ) {
-                throw new Error(`Invalid class entry: ${row}`)
-            }
-            classes[`${row[0]} ${row[1]}`] = {
-                prefix: row[0],
-                course: +row[1],
-                name: row[2],
-                semester: semester,
-                grade: row[5],
-                transfer,
-                fastTrack,
+            if (row.length < 7) {
+                if (isNaN(+row[1]) || isNaN(+row[3]) || isNaN(+row[4])) {
+                    throw new Error(`Invalid class entry: ${row}`)
+                }
+                classes[`${row[0]} ${row[1]}`] = {
+                    prefix: row[0],
+                    course: +row[1],
+                    name: row[2],
+                    semester: semester,
+                    grade: 'In Progress',
+                    transfer,
+                    fastTrack,
+                }
+            } else {
+                if (
+                    isNaN(+row[1]) ||
+                    isNaN(+row[3]) ||
+                    isNaN(+row[4]) ||
+                    isNaN(+row[6])
+                ) {
+                    throw new Error(`Invalid class entry: ${row}`)
+                }
+                classes[`${row[0]} ${row[1]}`] = {
+                    prefix: row[0],
+                    course: +row[1],
+                    name: row[2],
+                    semester: semester,
+                    grade: row[5],
+                    transfer,
+                    fastTrack,
+                }
             }
         })
 
