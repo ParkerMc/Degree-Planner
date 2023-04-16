@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { Class, Semester } from '../features/student/model'
 import { RequiredCourse } from '../features/trackRequirements/model'
 import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
+import { Delete, RestartAlt } from '@mui/icons-material'
 
 interface DegreePlanRowProps {
     course?: DegreePlanRequiredCourse
@@ -38,7 +39,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         }))
 
     return (
-        <Box sx={{ display: 'flex', gap: '5px' }}>
+        <Box sx={{ display: 'flex', gap: '10px' }}>
             {/* TODO allow freetext */}
             <Autocomplete
                 options={courseOptions}
@@ -87,11 +88,9 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 renderInput={(params) => (
                     <TextField {...params} label="Semester" />
                 )}
-                value={
-                    props.transcriptClass
-                        ? { label: props.transcriptClass.semester.semester }
-                        : undefined
-                }
+                value={semesters.find(
+                    (s) => s.label === props.transcriptClass?.semester.semester
+                )}
                 // onChange={(_, value) => {
                 //     if (!props.onCourseChange) {
                 //         return
@@ -145,7 +144,12 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 // }
             />
             <ButtonGroup variant="contained">
-                <Button onClick={props.onRemove}>-</Button>
+                <Button onClick={props.onRemove}>
+                    <Delete />
+                </Button>
+                <Button>
+                    <RestartAlt />
+                </Button>
                 {/* {props.add ? <Button onClick={props.onAdd}>+</Button> : null} */}
             </ButtonGroup>
         </Box>

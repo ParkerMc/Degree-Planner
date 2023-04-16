@@ -161,7 +161,6 @@ const importTranscript = createAsyncThunk(
 
         const classes: { [key: string]: Class } = {}
         classRows.forEach(({ semester, row, transfer, fastTrack }) => {
-            // TODO add grade
             if (
                 isNaN(+row[1]) ||
                 isNaN(+row[3]) ||

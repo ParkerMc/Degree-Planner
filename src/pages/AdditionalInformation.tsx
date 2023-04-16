@@ -70,6 +70,7 @@ export default function AdditionalInformation() {
                 onChange={(_, value) => {
                     dispatch(setTrack(value?.label ?? ''))
                 }}
+                title="Track"
             />
             <FormGroup>
                 <FormControlLabel
@@ -81,6 +82,7 @@ export default function AdditionalInformation() {
                             }
                         />
                     }
+                    title="Fast Track"
                     label="Fast Track"
                 />
                 <FormControlLabel
@@ -92,11 +94,13 @@ export default function AdditionalInformation() {
                             }
                         />
                     }
+                    title="Pursuing Thesis"
                     label="Pursuing Thesis"
                 />
             </FormGroup>
             <Box
                 sx={{
+                    marginTop: '10px',
                     display: 'flex',
                     alignSelf: 'stretch',
                     justifyContent: 'space-evenly',
@@ -104,16 +108,17 @@ export default function AdditionalInformation() {
                 }}
             >
                 <Button
-                    disabled={track === undefined}
                     variant="contained"
                     onClick={() => dispatch(reset())}
+                    title="Back"
                 >
                     <ArrowBack /> Back
                 </Button>
                 <Button
-                    disabled={track === undefined}
+                    disabled={track === ''}
                     variant="contained"
                     onClick={() => dispatch(setupDegreePlan(track))}
+                    title="Continue"
                 >
                     Continue
                 </Button>

@@ -67,6 +67,7 @@ export default function Home() {
                     onClick={() => {
                         studentDataInput.current?.click()
                     }}
+                    title="Upload Student Data"
                 >
                     <Upload />
                     Upload Student Data
@@ -85,6 +86,7 @@ export default function Home() {
                     onClick={() => {
                         transcriptInput.current?.click()
                     }}
+                    title="Import Transcript"
                 >
                     <ImportExport />
                     Import Transcript

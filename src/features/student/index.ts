@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import importSave from '../importSave'
 import reset from '../reset'
 import importTranscript from './importTranscript'
-import { StudentState } from './model'
+import { SemesterYear, StudentState } from './model'
 
 const initialState: StudentState = {
     additionalInfo: {
@@ -16,6 +16,9 @@ const studentSlice = createSlice({
     name: 'student',
     initialState,
     reducers: {
+        setAdmission: (state, action: PayloadAction<SemesterYear>) => {
+            state.transcript!.semesterAdmitted = action.payload
+        },
         setTrack: (state, action: PayloadAction<string>) => {
             state.additionalInfo.track = action.payload
         },
@@ -41,4 +44,5 @@ const studentSlice = createSlice({
 
 export default studentSlice.reducer
 
-export const { setTrack, setFastTrack, setThesis } = studentSlice.actions
+export const { setTrack, setFastTrack, setThesis, setAdmission } =
+    studentSlice.actions

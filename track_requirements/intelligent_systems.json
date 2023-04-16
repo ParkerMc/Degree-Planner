@@ -67,6 +67,7 @@
         },
         "prerequisites": {
             "name": "Admission Prerequisites",
+            "classes": [],
             "suggestedClasses": [
                 {
                     "name": "Computer Science I",

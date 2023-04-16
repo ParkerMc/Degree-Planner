@@ -39,6 +39,12 @@ export default function Print() {
         border: 1.5px solid black;
     `
 
+    const NameTh = styled.th`
+        padding: 0 0.5em 0 0.5em;
+        border: 1.5px solid black;
+        text-align: left;
+    `
+
     const HeaderCol = styled.th`
         padding: 0.5em;
         border: 1.5px solid black;
@@ -77,10 +83,10 @@ export default function Print() {
             student.transcript?.classes[classKey]
         return (
             <Tr key={i}>
-                <Th>{c?.name}</Th>
+                <NameTh>{c?.name}</NameTh>
                 <Th>{classKey}</Th>
                 <Th>
-                    {transcriptCourse?.semester.year.toString().slice(-2)}{' '}
+                    {transcriptCourse?.semester.year}{' '}
                     {transcriptCourse?.semester.semester}
                 </Th>
                 <Th>
@@ -208,9 +214,10 @@ export default function Print() {
                                     </Header>
                                     <Header>
                                         Semester Admitted To Program:{' '}
-                                        {student.transcript?.semesterAdmitted.year
-                                            .toString()
-                                            .slice(-2)}{' '}
+                                        {
+                                            student.transcript?.semesterAdmitted
+                                                .year
+                                        }{' '}
                                         {
                                             student.transcript?.semesterAdmitted
                                                 .semester
@@ -219,7 +226,7 @@ export default function Print() {
                                 </LeftBox>
                                 <RightBox>
                                     <Header>
-                                        FT:{' '}
+                                        FT :{' '}
                                         {student.additionalInfo.fastTrack ? (
                                             <CheckBoxOutlined />
                                         ) : (
@@ -227,7 +234,7 @@ export default function Print() {
                                         )}
                                     </Header>
                                     <Header>
-                                        Thesis:{' '}
+                                        Thesis :{' '}
                                         {student.additionalInfo.thesis ? (
                                             <CheckBoxOutlined />
                                         ) : (
