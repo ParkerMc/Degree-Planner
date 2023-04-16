@@ -69,6 +69,36 @@
         "other": {
             "name": "Other Requirements",
             "classes": []
+        },
+        "prerequisites": {
+            "name": "Admission Prerequisites",
+            "suggestedClasses": [
+                {
+                    "name": "Computer Science I",
+                    "prefix": "CS",
+                    "number": 5303
+                },
+                {
+                    "name": "Computer Science II",
+                    "prefix": "CS",
+                    "number": 5330
+                },
+                {
+                    "name": "Discrete Structures",
+                    "prefix": "CS",
+                    "number": 5333
+                },
+                {
+                    "name": "Algorithm Analysis & Data Structures",
+                    "prefix": "CS",
+                    "number": 5343
+                },
+                {
+                    "name": "Operating System Concepts",
+                    "prefix": "CS",
+                    "number": 5348
+                }
+            ]
         }
     }
 }
