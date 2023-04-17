@@ -89,7 +89,9 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                     <TextField {...params} label="Semester" />
                 )}
                 value={semesters.find(
-                    (s) => s.label === props.transcriptClass?.semester.semester
+                    (s) =>
+                        s.label ===
+                        props.transcriptClass?.grade.semester.semester
                 )}
                 // onChange={(_, value) => {
                 //     if (!props.onCourseChange) {
@@ -113,7 +115,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 sx={{ width: 100 }}
                 label="Year"
                 type={'number'}
-                value={props.transcriptClass?.semester.year}
+                value={props.transcriptClass?.grade.semester.year}
                 // onChange={(e) => setCourseName(e.target.value)}
                 // onBlur={(e) =>
                 //     props.onCourseChange &&

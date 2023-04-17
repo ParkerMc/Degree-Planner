@@ -142,7 +142,7 @@ const importTranscript = createAsyncThunk(
                 }
 
                 // Skip middle rows
-                if (row.length < 7) {
+                if (row.length < 6) {
                     return null!
                 }
 
@@ -161,20 +161,18 @@ const importTranscript = createAsyncThunk(
 
         const classes: { [key: string]: Class } = {}
         classRows.forEach(({ semester, row, transfer, fastTrack }) => {
-            if (
-                isNaN(+row[1]) ||
-                isNaN(+row[3]) ||
-                isNaN(+row[4]) ||
-                isNaN(+row[6])
-            ) {
+            if (isNaN(+row[1])) {
                 throw new Error(`Invalid class entry: ${row}`)
             }
             classes[`${row[0]} ${row[1]}`] = {
                 prefix: row[0],
                 course: +row[1],
                 name: row[2],
-                semester: semester,
-                grade: row[5],
+                grade: {
+                    semester,
+                    grade: +row[5] === 0 ? 'IP' : row[5],
+                },
+                otherGrades: [], // TODO
                 transfer,
                 fastTrack,
             }

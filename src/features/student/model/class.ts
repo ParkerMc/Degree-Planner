@@ -1,11 +1,11 @@
-import { SemesterYear } from '.'
+import { Grade } from './grade'
 
 export interface Class {
     prefix: string
     course: number
     name: string
-    semester: SemesterYear
-    grade: string
+    grade: Grade
+    otherGrades: Grade[]
     transfer: boolean
     fastTrack: boolean
 }
