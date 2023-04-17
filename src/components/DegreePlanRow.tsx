@@ -132,7 +132,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
             <TextField
                 sx={{ width: 100 }}
                 label="Grade"
-                value={props.transcriptClass?.grade}
+                value={props.transcriptClass?.grade.grade}
                 // onChange={(e) => setCourseName(e.target.value)}
                 // onBlur={(e) =>
                 //     props.onCourseChange &&
