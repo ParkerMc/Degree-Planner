@@ -6,15 +6,17 @@ import {
     TextField,
 } from '@mui/material'
 import { useState } from 'react'
-import { Class, Semester } from '../features/student/model'
+import { Class } from '../features/student/model'
 import { RequiredCourse } from '../features/trackRequirements/model'
 import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
 import { Delete, RestartAlt } from '@mui/icons-material'
+import SemesterSelector from './SemesterSelector'
 
 interface DegreePlanRowProps {
     course?: DegreePlanRequiredCourse
     transcriptClass?: Class
     overrideClass?: Class
+    onOverrideChange?: (value?: Class) => void
     onCourseChange?: (value?: RequiredCourse) => void
     onRemove?: () => void
 }
@@ -32,11 +34,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         },
     ]
 
-    const semesters = Object.values(Semester)
-        .filter((s) => s !== 'N/A')
-        .map((s) => ({
-            label: s,
-        }))
+    const edited = props.overrideClass || props.course?.modified
 
     return (
         <Box sx={{ display: 'flex', gap: '10px' }}>
@@ -82,58 +80,64 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                         : undefined
                 }
             />
-            <Autocomplete
-                options={semesters}
-                sx={{ width: 200 }}
-                renderInput={(params) => (
-                    <TextField {...params} label="Semester" />
-                )}
-                value={semesters.find(
-                    (s) =>
-                        s.label ===
-                        props.transcriptClass?.grade.semester.semester
-                )}
-                // onChange={(_, value) => {
-                //     if (!props.onCourseChange) {
-                //         return
-                //     }
-
-                //     // TODO error check value
-                //     if (!value) {
-                //         props.onCourseChange(undefined)
-                //         return
-                //     }
-                //     const split = value.label.split(' ')
-                //     props.onCourseChange({
-                //         prefix: split[0],
-                //         number: +split[1],
-                //         name: '',
-                //     })
-                // }}
-            />
-            <TextField
-                sx={{ width: 100 }}
-                label="Year"
-                type={'number'}
-                value={props.transcriptClass?.grade.semester.year}
-                // onChange={(e) => setCourseName(e.target.value)}
-                // onBlur={(e) =>
-                //     props.onCourseChange &&
-                //     props.course &&
-                //     props.course.name !== courseName
-                //         ? props.onCourseChange({
-                //               ...props.course,
-                //               name: courseName ?? '',
-                //           })
-                //         : undefined
-                // }
+            <SemesterSelector
+                disabled={!props.course}
+                semester={
+                    props.overrideClass
+                        ? props.overrideClass.grade?.semester
+                        : props.transcriptClass?.grade?.semester
+                }
+                onChange={(value) => {
+                    if (!props.onOverrideChange || !props.course) {
+                        return
+                    }
+                    const oldClass =
+                        props.overrideClass ?? props.transcriptClass
+                    props.onOverrideChange({
+                        prefix: props.course.prefix,
+                        course: props.course.number,
+                        name: props.course.name,
+                        otherGrades: [],
+                        transfer: false,
+                        fastTrack: false, // TODO add fastrack and transfer fields
+                        ...oldClass,
+                        grade: {
+                            semester: value,
+                            grade: oldClass?.grade.grade,
+                        },
+                    })
+                }}
             />
             {/* TODO change to autocomplete (maybe) */}
             <TextField
+                disabled={!props.course}
                 sx={{ width: 100 }}
                 label="Grade"
-                value={props.transcriptClass?.grade.grade}
-                // onChange={(e) => setCourseName(e.target.value)}
+                value={
+                    (props.overrideClass
+                        ? props.overrideClass.grade?.grade
+                        : props.transcriptClass?.grade?.grade) ?? undefined
+                }
+                onChange={(e) => {
+                    if (!props.onOverrideChange || !props.course) {
+                        return
+                    }
+                    const oldClass =
+                        props.overrideClass ?? props.transcriptClass
+                    props.onOverrideChange({
+                        prefix: props.course.prefix,
+                        course: props.course.number,
+                        name: props.course.name,
+                        otherGrades: [],
+                        transfer: false,
+                        fastTrack: false, // TODO add fastrack and transfer fields
+                        ...oldClass,
+                        grade: {
+                            semester: oldClass?.grade.semester,
+                            grade: e.target.value,
+                        },
+                    })
+                }}
                 // onBlur={(e) =>
                 //     props.onCourseChange &&
                 //     props.course &&
@@ -149,10 +153,20 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 <Button onClick={props.onRemove}>
                     <Delete />
                 </Button>
-                <Button>
-                    <RestartAlt />
-                </Button>
-                {/* {props.add ? <Button onClick={props.onAdd}>+</Button> : null} */}
+                {
+                    edited ? (
+                        <Button
+                            onClick={(e) =>
+                                props.onOverrideChange
+                                    ? props.onOverrideChange(undefined)
+                                    : null
+                            }
+                        >
+                            <RestartAlt />
+                        </Button>
+                    ) : null // TODO fix layout with button
+                    // TODO fix field change when new transcript is imported or field is resetf
+                }
             </ButtonGroup>
         </Box>
     )

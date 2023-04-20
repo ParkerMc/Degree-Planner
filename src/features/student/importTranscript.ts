@@ -170,7 +170,7 @@ const importTranscript = createAsyncThunk(
                 name: row[2],
                 grade: {
                     semester,
-                    grade: +row[5] === 0 ? 'IP' : row[5],
+                    grade: +row[5] === 0 ? undefined : row[5],
                 },
                 otherGrades: [], // TODO
                 transfer,

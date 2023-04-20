@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import DegreePlanRow from '../components/DegreePlanRow'
 import SaveStudentButton from '../components/SaveStudentButton'
 import SemesterSelector from '../components/SemesterSelector'
+import { clearClassOverride, updateClassOverride } from '../features/degreePlan'
 import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
 import reset from '../features/reset'
 import { setAdmission, setFastTrack, setThesis } from '../features/student'
@@ -51,6 +52,13 @@ export default function DegreePlan() {
                 course={c ?? undefined}
                 overrideClass={degreePlan.classOverrides[classKey]}
                 transcriptClass={student.transcript?.classes[classKey]}
+                onOverrideChange={(value) =>
+                    dispatch(
+                        value
+                            ? updateClassOverride(value)
+                            : clearClassOverride(classKey)
+                    )
+                }
                 // onChange={(v) => {
                 //     setRows([
                 //         ...rows.slice(0, i),
@@ -239,6 +247,7 @@ export default function DegreePlan() {
                     alignSelf: 'stretch',
                     justifyContent: 'center',
                     marginTop: '20px',
+                    paddingBottom: '15px',
                     gap: '20px',
                 }}
             >

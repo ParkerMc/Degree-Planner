@@ -86,8 +86,8 @@ export default function Print() {
                 <NameTh>{c?.name}</NameTh>
                 <Th>{classKey}</Th>
                 <Th>
-                    {transcriptCourse?.grade.semester.year}{' '}
-                    {transcriptCourse?.grade.semester.semester}
+                    {transcriptCourse?.grade.semester?.year}{' '}
+                    {transcriptCourse?.grade.semester?.semester}
                 </Th>
                 <Th>
                     {transcriptCourse?.fastTrack

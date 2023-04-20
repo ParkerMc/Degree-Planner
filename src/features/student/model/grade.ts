@@ -1,6 +1,6 @@
 import { SemesterYear } from '.'
 
 export interface Grade {
-    semester: SemesterYear
-    grade: string
+    semester?: SemesterYear
+    grade?: string
 }

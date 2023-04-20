@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import importSave from '../importSave'
 import reset from '../reset'
+import { Class } from '../student/model'
 import { DegreePlanState } from './model'
 import setupDegreePlan from './setupDegreePlan'
 
@@ -15,7 +16,16 @@ const initialState: DegreePlanState = {
 const degreePlanSlice = createSlice({
     name: 'degreePlan',
     initialState,
-    reducers: {},
+    reducers: {
+        updateClassOverride: (state, action: PayloadAction<Class>) => {
+            state.classOverrides[
+                `${action.payload.prefix} ${action.payload.course}`
+            ] = action.payload
+        },
+        clearClassOverride: (state, action: PayloadAction<string>) => {
+            delete state.classOverrides[action.payload]
+        },
+    },
     extraReducers: (builder) =>
         builder
             .addCase(setupDegreePlan.fulfilled, (_, action) => action.payload)
@@ -27,3 +37,5 @@ const degreePlanSlice = createSlice({
 })
 
 export default degreePlanSlice.reducer
+export const { updateClassOverride, clearClassOverride } =
+    degreePlanSlice.actions

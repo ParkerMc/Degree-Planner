@@ -7,6 +7,8 @@ interface SemesterSelectorProps {
     postfix?: string
     semesterWidth?: number
     yearWidth?: number
+    disabled?: boolean
+    disableClearable?: boolean // TODO implement
     onChange?: (value?: SemesterYear) => void
 }
 
@@ -23,11 +25,15 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
     return (
         <Box sx={{ display: 'flex', gap: '10px' }}>
             <Autocomplete
+                disabled={props.disabled}
                 options={semesters}
-                sx={{ width: props.semesterWidth ?? 100 }}
-                title={`Semester${props.postfix}`}
+                sx={{ width: props.semesterWidth ?? 120 }}
+                title={`Semester${props.postfix ?? ''}`}
                 renderInput={(params) => (
-                    <TextField {...params} label={`Semester${props.postfix}`} />
+                    <TextField
+                        {...params}
+                        label={`Semester${props.postfix ?? ''}`}
+                    />
                 )}
                 disableClearable={true}
                 value={semesters.find((s) => s.label === semester) ?? undefined}
@@ -42,15 +48,17 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
                 }}
             />
             <TextField
+                disabled={props.disabled}
                 sx={{ width: props.yearWidth ?? 90 }}
-                label="Year Admitted"
+                label={`Year${props.postfix ?? ''}`}
                 type={'number'}
                 value={year ?? undefined}
                 onChange={(e) => setYear(+e.target.value)}
+                // TODO on blur is not triggered when using the arrows without selecting first
                 onBlur={(e) =>
                     year && props.semester?.year !== year && props.onChange
                         ? props.onChange({
-                              semester: semester ?? Semester.Spring,
+                              semester: semester ?? Semester.Fall,
                               year,
                           })
                         : undefined
