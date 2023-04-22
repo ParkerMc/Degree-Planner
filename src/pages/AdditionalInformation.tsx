@@ -63,9 +63,7 @@ export default function AdditionalInformation() {
                     <TextField {...params} label="Track" />
                 )}
                 value={
-                    track !== undefined
-                        ? tracks.find((t) => t.label === track) ?? null
-                        : null
+                    track ? tracks.find((t) => t.label === track) ?? null : null
                 }
                 onChange={(_, value) => {
                     dispatch(setTrack(value?.label ?? ''))

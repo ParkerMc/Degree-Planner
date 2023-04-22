@@ -3,6 +3,7 @@ import { Semester, SemesterYear, TranscriptDataResponse } from './model'
 import { TextItem as PdfTextItem } from 'pdfjs-dist/types/src/display/api'
 import { RootState } from '../../app/store'
 import { Class } from './model'
+import { Grade } from './model/grade'
 
 const importTranscript = createAsyncThunk(
     'student/importTranscript',
@@ -164,7 +165,13 @@ const importTranscript = createAsyncThunk(
             if (isNaN(+row[1])) {
                 throw new Error(`Invalid class entry: ${row}`)
             }
-            classes[`${row[0]} ${row[1]}`] = {
+            const key = `${row[0]} ${row[1]}`
+            let otherGrades: Grade[] = []
+            if (classes[key]) {
+                otherGrades = [classes[key].grade, ...classes[key].otherGrades]
+            }
+
+            classes[key] = {
                 prefix: row[0],
                 course: +row[1],
                 name: row[2],
@@ -172,7 +179,7 @@ const importTranscript = createAsyncThunk(
                     semester,
                     grade: +row[5] === 0 ? undefined : row[5],
                 },
-                otherGrades: [], // TODO
+                otherGrades,
                 transfer,
                 fastTrack,
             }

@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Semester, SemesterYear } from '../features/student/model'
 
 interface SemesterSelectorProps {
@@ -8,13 +8,18 @@ interface SemesterSelectorProps {
     semesterWidth?: number
     yearWidth?: number
     disabled?: boolean
-    disableClearable?: boolean // TODO implement
+    disableClearable?: boolean
     onChange?: (value?: SemesterYear) => void
 }
 
 export default function SemesterSelector(props: SemesterSelectorProps) {
     const [semester, setSemester] = useState(props.semester?.semester)
     const [year, setYear] = useState(props.semester?.year)
+
+    useEffect(() => {
+        setSemester(props.semester?.semester)
+        setYear(props.semester?.year)
+    }, [props.semester])
 
     const semesters = Object.values(Semester)
         .filter((s) => s !== 'N/A')
@@ -27,22 +32,24 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
             <Autocomplete
                 disabled={props.disabled}
                 options={semesters}
-                sx={{ width: props.semesterWidth ?? 120 }}
+                sx={{ width: props.semesterWidth ?? 150 }}
                 title={`Semester${props.postfix ?? ''}`}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={`Semester${props.postfix ?? ''}`}
-                    />
-                )}
-                disableClearable={true}
-                value={semesters.find((s) => s.label === semester) ?? undefined}
+                disableClearable={props.disableClearable}
+                renderInput={(params) => {
+                    return (
+                        <TextField
+                            {...params}
+                            label={`Semester${props.postfix ?? ''}`}
+                        />
+                    )
+                }}
+                value={semesters.find((s) => s.label === semester) ?? null}
                 onChange={(_, value) => {
-                    setSemester(value.label as Semester)
+                    setSemester(value?.label as Semester | undefined)
                     if (props.onChange) {
                         props.onChange({
-                            semester: value.label as Semester,
-                            year: year ?? new Date().getFullYear(),
+                            semester: value?.label as Semester | undefined,
+                            year: year,
                         })
                     }
                 }}
@@ -52,17 +59,35 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
                 sx={{ width: props.yearWidth ?? 90 }}
                 label={`Year${props.postfix ?? ''}`}
                 type={'number'}
-                value={year ?? undefined}
-                onChange={(e) => setYear(+e.target.value)}
-                // TODO on blur is not triggered when using the arrows without selecting first
-                onBlur={(e) =>
-                    year && props.semester?.year !== year && props.onChange
-                        ? props.onChange({
-                              semester: semester ?? Semester.Fall,
-                              year,
-                          })
-                        : undefined
-                }
+                value={year ?? ''}
+                onChange={(e) => {
+                    const value =
+                        +e.target.value ||
+                        (props.disableClearable ? year : undefined)
+                    if (
+                        props.onChange &&
+                        Math.abs(+e.target.value - (year ?? 0)) === 1
+                    ) {
+                        props.onChange({
+                            semester,
+                            year: value,
+                        })
+                    }
+                    setYear(value)
+                }}
+                onBlur={(e) => {
+                    e.target.value = (+e.target.value).toString()
+                    if (
+                        year &&
+                        props.semester?.year !== year &&
+                        props.onChange
+                    ) {
+                        props.onChange({
+                            semester,
+                            year,
+                        })
+                    }
+                }}
             />
         </Box>
     )

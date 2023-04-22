@@ -150,6 +150,7 @@ export default function DegreePlan() {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
+                    alignSelf: 'start',
                 }}
             >
                 {requirementGroup.classes ||
@@ -209,6 +210,7 @@ export default function DegreePlan() {
                     postfix=" Admitted"
                     semesterWidth={130}
                     yearWidth={100}
+                    disableClearable
                     onChange={(value) =>
                         value ? dispatch(setAdmission(value)) : null
                     }
