@@ -6,6 +6,7 @@ import {
     CheckBoxOutlineBlankOutlined,
     CheckBoxOutlined,
 } from '@mui/icons-material'
+import { Semester } from '../features/student/model'
 
 export default function Print() {
     const [degreePlan, student] = useAppSelector((state) => [
@@ -76,6 +77,14 @@ export default function Print() {
         align-items: flex-end;
         justify-content: flex-end;
     `
+
+    const semesterMap = {
+        [Semester.Fall]: 'F',
+        [Semester.Spring]: 'S',
+        [Semester.Summer]: 'U',
+        [Semester.None]: '',
+    }
+
     const formatClass = (c: RequiredCourse | undefined | null, i: number) => {
         const classKey = `${c?.prefix ?? ''} ${c?.number ?? ''}`
         const transcriptCourse =
@@ -86,8 +95,27 @@ export default function Print() {
                 <NameTh>{c?.name}</NameTh>
                 <Th>{classKey}</Th>
                 <Th>
-                    {transcriptCourse?.grade.semester?.year}{' '}
-                    {transcriptCourse?.grade.semester?.semester}
+                    {!(transcriptCourse?.otherGrades.length ?? 0)
+                        ? `${transcriptCourse?.grade.semester?.year ?? ''} ${
+                              transcriptCourse?.grade.semester?.semester ?? ''
+                          }`
+                        : [
+                              ...(transcriptCourse?.otherGrades ?? []),
+                              transcriptCourse?.grade,
+                          ]
+                              .filter((g) => g)
+                              .map(
+                                  (g) =>
+                                      `${g.semester?.year
+                                          ?.toString()
+                                          .slice(-2)}${
+                                          semesterMap[
+                                              g.semester?.semester ??
+                                                  Semester.None
+                                          ]
+                                      }`
+                              )
+                              .join('/')}
                 </Th>
                 <Th>
                     {transcriptCourse?.fastTrack
@@ -96,7 +124,16 @@ export default function Print() {
                         ? 'Transfer'
                         : null}
                 </Th>
-                <Th>{transcriptCourse?.grade.grade}</Th>
+
+                <Th>
+                    {[
+                        ...(transcriptCourse?.otherGrades ?? []),
+                        transcriptCourse?.grade,
+                    ]
+                        .filter((g) => g)
+                        .map((g) => g.grade)
+                        .join('/')}
+                </Th>
             </Tr>
         )
     }
