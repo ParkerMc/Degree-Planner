@@ -33,7 +33,9 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 props.transcriptClass?.grade.semester?.semester ===
                     value?.grade.semester?.semester &&
                 props.transcriptClass?.grade.semester?.year ===
-                    value?.grade.semester?.year
+                    value?.grade.semester?.year &&
+                props.transcriptClass?.transfer === value?.transfer &&
+                props.transcriptClass?.fastTrack === value?.fastTrack
             ) {
                 props.onOverrideChange(undefined)
                 return
@@ -50,6 +52,9 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         })
     }
 
+    const transferOptions = ['Transfer', 'Fast Track'].map((v) => ({
+        label: v,
+    }))
     const grades = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'F', 'I', 'P'].map(
         (g) => ({
             label: g,
@@ -121,7 +126,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                         name: props.course.name,
                         otherGrades: [],
                         transfer: false,
-                        fastTrack: false, // TODO add fastrack and transfer fields
+                        fastTrack: false,
                         ...oldClass,
                         grade: {
                             semester: value,
@@ -167,6 +172,41 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                             semester: oldClass?.grade.semester,
                             grade: value?.label,
                         },
+                    })
+                }}
+            />
+
+            <Autocomplete
+                disabled={!props.course}
+                options={transferOptions}
+                sx={{ width: 160 }}
+                title="Taken as"
+                renderInput={(params) => (
+                    <TextField {...params} label="Taken As" />
+                )}
+                value={
+                    (props.overrideClass ?? props.transcriptClass)?.fastTrack
+                        ? transferOptions[1]
+                        : (props.overrideClass ?? props.transcriptClass)
+                              ?.transfer
+                        ? transferOptions[0]
+                        : null
+                }
+                onChange={(_, value) => {
+                    if (!props.onOverrideChange || !props.course) {
+                        return
+                    }
+                    const oldClass =
+                        props.overrideClass ?? props.transcriptClass
+                    pushOverrideChange({
+                        prefix: props.course.prefix,
+                        course: props.course.number,
+                        name: props.course.name,
+                        otherGrades: [],
+                        grade: {},
+                        ...oldClass,
+                        transfer: value ? true : false,
+                        fastTrack: value === transferOptions[1],
                     })
                 }}
             />
