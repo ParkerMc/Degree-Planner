@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { DegreePlanState } from './model'
 import { RootState } from '../../app/store'
 import { RequirementGroup } from '../trackRequirements/model'
-import { DegreePlanRequiredCourse } from './model/degreePlanRequiredCourse'
+import { DegreePlanRequiredCourse } from './model'
 
 const setupDegreePlan = createAsyncThunk(
     'degreePlan/setup',

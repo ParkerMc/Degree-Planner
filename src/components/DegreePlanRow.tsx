@@ -5,10 +5,10 @@ import {
     ButtonGroup,
     TextField,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Class } from '../features/student/model'
 import { RequiredCourse } from '../features/trackRequirements/model'
-import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
+import { DegreePlanRequiredCourse } from '../features/degreePlan/model'
 import { Delete, RestartAlt } from '@mui/icons-material'
 import GradeSelector from './GradeSelector'
 
@@ -16,6 +16,8 @@ interface DegreePlanRowProps {
     course?: DegreePlanRequiredCourse
     transcriptClass?: Class
     overrideClass?: Class
+    suggestedClasses?: Class[]
+    allClasses?: Class[]
     onOverrideChange?: (value?: Class) => void
     onCourseChange?: (value?: RequiredCourse) => void
     onRemove?: () => void
@@ -25,6 +27,12 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
     const [courseName, setCourseName] = useState(
         props.course?.name === '' ? undefined : props.course?.name
     )
+
+    useEffect(() => {
+        setCourseName(
+            props.course?.name === '' ? undefined : props.course?.name
+        )
+    }, [props.course])
 
     const pushOverrideChange = (value?: Class) => {
         if (props.onOverrideChange) {
@@ -89,7 +97,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
             <TextField
                 sx={{ width: 400 }}
                 label="Course Name"
-                value={courseName}
+                value={courseName ?? ''}
                 onChange={(e) => setCourseName(e.target.value)}
                 onBlur={(e) =>
                     props.onCourseChange &&
@@ -164,9 +172,11 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
             />
 
             <ButtonGroup variant="contained">
-                <Button onClick={props.onRemove}>
-                    <Delete />
-                </Button>
+                {props.course ? (
+                    <Button onClick={props.onRemove}>
+                        <Delete />
+                    </Button>
+                ) : null}
                 {edited ? (
                     <Button
                         onClick={(e) =>

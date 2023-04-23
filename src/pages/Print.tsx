@@ -152,7 +152,7 @@ export default function Print() {
                                     : `${
                                           g.countRequired
                                       } of the following Course${
-                                          g.classes.length > 1 ? 's' : null
+                                          g.classes.length > 1 ? 's' : ''
                                       }`}
                                 {g.creditHours
                                     ? ` (${g.creditHours} Credit Hours)`

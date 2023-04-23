@@ -7,8 +7,15 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import DegreePlanRow from '../components/DegreePlanRow'
 import SaveStudentButton from '../components/SaveStudentButton'
 import SemesterSelector from '../components/SemesterSelector'
-import { clearClassOverride, updateClassOverride } from '../features/degreePlan'
-import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
+import {
+    clearClassOverride,
+    removeCourse,
+    updateClassOverride,
+} from '../features/degreePlan'
+import {
+    CourseIdentifier,
+    DegreePlanRequiredCourse,
+} from '../features/degreePlan/model'
 import reset from '../features/reset'
 import { setAdmission, setFastTrack, setThesis } from '../features/student'
 import importTranscript from '../features/student/importTranscript'
@@ -42,8 +49,9 @@ export default function DegreePlan() {
     `
 
     const formatClass = (
-        c: DegreePlanRequiredCourse | undefined,
-        i: number
+        i: number,
+        c?: DegreePlanRequiredCourse,
+        id?: CourseIdentifier
     ) => {
         const classKey = `${c?.prefix} ${c?.number}`
         return (
@@ -52,6 +60,12 @@ export default function DegreePlan() {
                 course={c ?? undefined}
                 overrideClass={degreePlan.classOverrides[classKey]}
                 transcriptClass={student.transcript?.classes[classKey]}
+                //TODO
+                // suggestedClasses={}
+                allClasses={[
+                    ...Object.values(degreePlan.classOverrides),
+                    ...Object.values(student.transcript?.classes ?? {}),
+                ]}
                 onOverrideChange={(value) =>
                     dispatch(
                         value
@@ -59,26 +73,12 @@ export default function DegreePlan() {
                             : clearClassOverride(classKey)
                     )
                 }
-                // onChange={(v) => {
-                //     setRows([
-                //         ...rows.slice(0, i),
-                //         v ?? '',
-                //         ...rows.slice(i + 1),
-                //     ])
-                // }}
-                // onAdd={() => {
-                //     setRows([...rows, ''])
-                // }}
-                // onRemove={() => {
-                //     if (rows.length > 1) {
-                //         setRows([
-                //             ...rows.slice(0, i),
-                //             ...rows.slice(i + 1),
-                //         ])
-                //     } else {
-                //         setRows([''])
-                //     }
-                // }}
+                onRemove={() => {
+                    if (!id) {
+                        return
+                    }
+                    dispatch(removeCourse(id))
+                }}
             />
         )
     }
@@ -88,10 +88,35 @@ export default function DegreePlan() {
 
         const classElements = !requirementGroup.classes
             ? undefined
-            : [...requirementGroup.classes, undefined].map(formatClass)
+            : [...requirementGroup.classes, undefined].map((c, i) =>
+                  formatClass(
+                      i,
+                      c,
+                      c
+                          ? {
+                                groupName: key,
+                                prefix: c.prefix,
+                                number: c.number,
+                            }
+                          : undefined
+                  )
+              )
 
         const classGroups = requirementGroup.groups?.map((g, j) => {
-            const groupClasses = [...g.classes, undefined].map(formatClass)
+            const groupClasses = [...g.classes, undefined].map((c, i) =>
+                formatClass(
+                    i,
+                    c,
+                    c
+                        ? {
+                              groupName: key,
+                              prefix: c.prefix,
+                              number: c.number,
+                              group: j,
+                          }
+                        : undefined
+                )
+            )
             return (
                 <Box
                     key={j}
@@ -109,7 +134,7 @@ export default function DegreePlan() {
                                     : `${
                                           g.countRequired
                                       } of the following Course${
-                                          g.classes.length > 1 ? 's' : null
+                                          g.classes.length > 1 ? 's' : ''
                                       }`}
                                 {g.creditHours
                                     ? ` (${g.creditHours} Credit Hours)`
