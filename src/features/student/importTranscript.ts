@@ -168,6 +168,14 @@ const importTranscript = createAsyncThunk(
             const key = `${row[0]} ${row[1]}`
             let otherGrades: Grade[] = []
             if (classes[key]) {
+                if (
+                    (fastTrack || transfer) &&
+                    classes[key].grade.grade === row[5]
+                ) {
+                    classes[key].transfer = transfer
+                    classes[key].fastTrack = fastTrack
+                    return
+                }
                 otherGrades = [classes[key].grade, ...classes[key].otherGrades]
             }
 
