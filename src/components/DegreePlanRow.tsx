@@ -10,7 +10,7 @@ import { Class } from '../features/student/model'
 import { RequiredCourse } from '../features/trackRequirements/model'
 import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
 import { Delete, RestartAlt } from '@mui/icons-material'
-import SemesterSelector from './SemesterSelector'
+import GradeSelector from './GradeSelector'
 
 interface DegreePlanRowProps {
     course?: DegreePlanRequiredCourse
@@ -55,11 +55,6 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
     const transferOptions = ['Transfer', 'Fast Track'].map((v) => ({
         label: v,
     }))
-    const grades = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'F', 'I', 'P'].map(
-        (g) => ({
-            label: g,
-        })
-    )
 
     const edited = props.overrideClass || props.course?.modified
 
@@ -107,12 +102,12 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                         : undefined
                 }
             />
-            <SemesterSelector
+            <GradeSelector
                 disabled={!props.course}
-                semester={
+                grade={
                     props.overrideClass
-                        ? props.overrideClass.grade?.semester
-                        : props.transcriptClass?.grade?.semester
+                        ? props.overrideClass.grade
+                        : props.transcriptClass?.grade
                 }
                 onChange={(value) => {
                     if (!props.onOverrideChange || !props.course) {
@@ -128,50 +123,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                         transfer: false,
                         fastTrack: false,
                         ...oldClass,
-                        grade: {
-                            semester: value,
-                            grade: oldClass?.grade.grade,
-                        },
-                    })
-                }}
-            />
-            <Autocomplete
-                disabled={!props.course}
-                options={grades}
-                sx={{ width: 100 }}
-                title="Grade"
-                renderInput={(params) => (
-                    <TextField {...params} label="Grade" />
-                )}
-                value={
-                    (props.overrideClass
-                        ? grades.find(
-                              (g) =>
-                                  g.label === props.overrideClass?.grade.grade
-                          )
-                        : grades.find(
-                              (g) =>
-                                  g.label === props.transcriptClass?.grade.grade
-                          )) ?? null
-                }
-                onChange={(_, value) => {
-                    if (!props.onOverrideChange || !props.course) {
-                        return
-                    }
-                    const oldClass =
-                        props.overrideClass ?? props.transcriptClass
-                    pushOverrideChange({
-                        prefix: props.course.prefix,
-                        course: props.course.number,
-                        name: props.course.name,
-                        otherGrades: [],
-                        transfer: false,
-                        fastTrack: false,
-                        ...oldClass,
-                        grade: {
-                            semester: oldClass?.grade.semester,
-                            grade: value?.label,
-                        },
+                        grade: value,
                     })
                 }}
             />

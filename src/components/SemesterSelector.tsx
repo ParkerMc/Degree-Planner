@@ -13,11 +13,9 @@ interface SemesterSelectorProps {
 }
 
 export default function SemesterSelector(props: SemesterSelectorProps) {
-    const [semester, setSemester] = useState(props.semester?.semester)
     const [year, setYear] = useState(props.semester?.year)
 
     useEffect(() => {
-        setSemester(props.semester?.semester)
         setYear(props.semester?.year)
     }, [props.semester])
 
@@ -43,9 +41,12 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
                         />
                     )
                 }}
-                value={semesters.find((s) => s.label === semester) ?? null}
+                value={
+                    semesters.find(
+                        (s) => s.label === props.semester?.semester
+                    ) ?? null
+                }
                 onChange={(_, value) => {
-                    setSemester(value?.label as Semester | undefined)
                     if (props.onChange) {
                         props.onChange({
                             semester: value?.label as Semester | undefined,
@@ -69,7 +70,7 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
                         Math.abs(+e.target.value - (year ?? 0)) === 1
                     ) {
                         props.onChange({
-                            semester,
+                            semester: props.semester?.semester,
                             year: value,
                         })
                     }
@@ -83,7 +84,7 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
                         props.onChange
                     ) {
                         props.onChange({
-                            semester,
+                            semester: props.semester?.semester,
                             year,
                         })
                     }
