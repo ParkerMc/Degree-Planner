@@ -11,6 +11,7 @@ import {
     clearClassOverride,
     removeCourse,
     updateClassOverride,
+    upsertCourse,
 } from '../features/degreePlan'
 import {
     CourseIdentifier,
@@ -19,6 +20,7 @@ import {
 import reset from '../features/reset'
 import { setAdmission, setFastTrack, setThesis } from '../features/student'
 import importTranscript from '../features/student/importTranscript'
+import { RequiredCourse } from '../features/trackRequirements/model'
 
 export default function DegreePlan() {
     const dispatch = useAppDispatch()
@@ -48,10 +50,25 @@ export default function DegreePlan() {
         margin: 0px;
     `
 
+    const allClassesByNumber = [
+        ...Object.values(degreePlan.classOverrides),
+        ...Object.values(student.transcript?.classes ?? {}),
+    ].sort((a, b) =>
+        a.prefix === b.prefix
+            ? a.course - b.course
+            : a.prefix.localeCompare(b.prefix)
+    )
+
+    const allClassesByName = [
+        ...Object.values(degreePlan.classOverrides),
+        ...Object.values(student.transcript?.classes ?? {}),
+    ].sort((a, b) => a.name.localeCompare(b.name))
+
     const formatClass = (
         i: number,
         c?: DegreePlanRequiredCourse,
-        id?: CourseIdentifier
+        id?: CourseIdentifier,
+        suggestedClasses?: RequiredCourse[]
     ) => {
         const classKey = `${c?.prefix} ${c?.number}`
         return (
@@ -60,12 +77,9 @@ export default function DegreePlan() {
                 course={c ?? undefined}
                 overrideClass={degreePlan.classOverrides[classKey]}
                 transcriptClass={student.transcript?.classes[classKey]}
-                //TODO
-                // suggestedClasses={}
-                allClasses={[
-                    ...Object.values(degreePlan.classOverrides),
-                    ...Object.values(student.transcript?.classes ?? {}),
-                ]}
+                suggestedClasses={suggestedClasses}
+                allClassesSortedNumber={allClassesByNumber}
+                allClassesSortedName={allClassesByName}
                 onOverrideChange={(value) =>
                     dispatch(
                         value
@@ -73,6 +87,12 @@ export default function DegreePlan() {
                             : clearClassOverride(classKey)
                     )
                 }
+                onCourseChange={(value) => {
+                    if (!id) {
+                        return
+                    }
+                    dispatch(upsertCourse({ id, value }))
+                }}
                 onRemove={() => {
                     if (!id) {
                         return
@@ -92,30 +112,24 @@ export default function DegreePlan() {
                   formatClass(
                       i,
                       c,
-                      c
-                          ? {
-                                groupName: key,
-                                prefix: c.prefix,
-                                number: c.number,
-                            }
-                          : undefined
+                      {
+                          groupName: key,
+                          prefix: c?.prefix,
+                          number: c?.number,
+                      },
+
+                      requirementGroup.suggestedClasses
                   )
               )
 
         const classGroups = requirementGroup.groups?.map((g, j) => {
             const groupClasses = [...g.classes, undefined].map((c, i) =>
-                formatClass(
-                    i,
-                    c,
-                    c
-                        ? {
-                              groupName: key,
-                              prefix: c.prefix,
-                              number: c.number,
-                              group: j,
-                          }
-                        : undefined
-                )
+                formatClass(i, c, {
+                    groupName: key,
+                    prefix: c?.prefix,
+                    number: c?.number,
+                    group: j,
+                })
             )
             return (
                 <Box

@@ -21,13 +21,17 @@ const setupDegreePlan = createAsyncThunk(
                 ...last,
                 groups: last.groups?.map((g) => ({
                     ...g,
-                    classes: g.classes?.map((c) =>
-                        c ? { ...c, default: c, modified: false } : undefined
-                    ),
+                    classes: g.classes.map((c) => ({
+                        ...c,
+                        default: c,
+                        modified: false,
+                    })),
                 })),
-                classes: last.classes?.map((c) =>
-                    c ? { ...c, default: c, modified: false } : undefined
-                ),
+                classes: last.classes?.map((c) => ({
+                    ...c,
+                    default: c,
+                    modified: false,
+                })),
             }
         })
 
