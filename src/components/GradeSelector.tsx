@@ -16,6 +16,16 @@ const grades = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'F', 'I', 'P'].map(
 )
 
 export default function GradeSelector(props: GradeSelectorProps) {
+    const onGradeChange = (value?: string | { label: string }) => {
+        if (!props.onChange) {
+            return
+        }
+        props.onChange({
+            semester: props.grade?.semester,
+            grade:
+                typeof value === 'string' ? value : value?.label ?? undefined,
+        })
+    }
     return (
         <Fragment>
             <SemesterSelector
@@ -41,20 +51,8 @@ export default function GradeSelector(props: GradeSelectorProps) {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        inputProps={{
-                            ...params.inputProps,
-                            onKeyDown: (e) => {
-                                console.log('B')
-                                if (e.key === 'Enter') {
-                                    console.log('C')
-                                }
-                            },
-                        }}
                         onBlur={(event) => {
-                            console.log('A')
-                            event.target.dispatchEvent(
-                                new KeyboardEvent('keydown', { key: 'Enter' })
-                            )
+                            onGradeChange(event.target.value)
                         }}
                         label="Grade"
                     />
@@ -63,16 +61,7 @@ export default function GradeSelector(props: GradeSelectorProps) {
                     grades.find((g) => g.label === props.grade?.grade) ?? null
                 }
                 onChange={(_, value) => {
-                    if (!props.onChange) {
-                        return
-                    }
-                    props.onChange({
-                        semester: props.grade?.semester,
-                        grade:
-                            typeof value === 'string'
-                                ? value
-                                : value?.label ?? undefined,
-                    })
+                    onGradeChange(value ?? undefined)
                 }}
             />
         </Fragment>
