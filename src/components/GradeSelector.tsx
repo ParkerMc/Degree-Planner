@@ -36,8 +36,28 @@ export default function GradeSelector(props: GradeSelectorProps) {
                 options={grades}
                 sx={{ width: 100 }}
                 title="Grade"
+                freeSolo
+                handleHomeEndKeys
                 renderInput={(params) => (
-                    <TextField {...params} label="Grade" />
+                    <TextField
+                        {...params}
+                        inputProps={{
+                            ...params.inputProps,
+                            onKeyDown: (e) => {
+                                console.log('B')
+                                if (e.key === 'Enter') {
+                                    console.log('C')
+                                }
+                            },
+                        }}
+                        onBlur={(event) => {
+                            console.log('A')
+                            event.target.dispatchEvent(
+                                new KeyboardEvent('keydown', { key: 'Enter' })
+                            )
+                        }}
+                        label="Grade"
+                    />
                 )}
                 value={
                     grades.find((g) => g.label === props.grade?.grade) ?? null
@@ -48,7 +68,10 @@ export default function GradeSelector(props: GradeSelectorProps) {
                     }
                     props.onChange({
                         semester: props.grade?.semester,
-                        grade: value?.label,
+                        grade:
+                            typeof value === 'string'
+                                ? value
+                                : value?.label ?? undefined,
                     })
                 }}
             />

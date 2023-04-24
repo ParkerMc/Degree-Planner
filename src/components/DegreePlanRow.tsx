@@ -81,7 +81,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
     }
 
     if (courseNumber && courseNumbers.indexOf(courseNumber) < 0) {
-        courseNumbers.push(courseNumber)
+        courseNumbers = [...courseNumbers, courseNumber]
     }
     const courseNumberOptions = courseNumbers.map((n) => ({
         label: n,
@@ -97,7 +97,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
     }
 
     if (courseName && courseNames.indexOf(courseName) < 0) {
-        courseNames.push(courseName)
+        courseNames = [...courseNames, courseName]
     }
     const courseNameOptions = courseNames.map((n) => ({
         label: n,

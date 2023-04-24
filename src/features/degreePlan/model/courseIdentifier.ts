@@ -1,6 +1,5 @@
 export interface CourseIdentifier {
     groupName: string
-    prefix?: string
-    number?: number
+    index: number
     group?: number
 }

@@ -50,7 +50,7 @@ export default function DegreePlan() {
         margin: 0px;
     `
 
-    const allClassesByNumber = [
+    let allClassesByNumber = [
         ...Object.values(degreePlan.classOverrides),
         ...Object.values(student.transcript?.classes ?? {}),
     ].sort((a, b) =>
@@ -58,12 +58,20 @@ export default function DegreePlan() {
             ? a.course - b.course
             : a.prefix.localeCompare(b.prefix)
     )
+    allClassesByNumber = allClassesByNumber.filter(
+        (c, i) =>
+            i === 0 ||
+            allClassesByNumber[i - 1].prefix !== c.prefix ||
+            allClassesByNumber[i - 1].course !== c.course
+    )
 
-    const allClassesByName = [
+    let allClassesByName = [
         ...Object.values(degreePlan.classOverrides),
         ...Object.values(student.transcript?.classes ?? {}),
     ].sort((a, b) => a.name.localeCompare(b.name))
-
+    allClassesByName = allClassesByName.filter(
+        (c, i) => i === 0 || allClassesByName[i - 1].name !== c.name
+    )
     const formatClass = (
         i: number,
         c?: DegreePlanRequiredCourse,
@@ -108,14 +116,13 @@ export default function DegreePlan() {
 
         const classElements = !requirementGroup.classes
             ? undefined
-            : [...requirementGroup.classes, undefined].map((c, i) =>
+            : [...requirementGroup.classes, undefined].map((c, j) =>
                   formatClass(
-                      i,
+                      j,
                       c,
                       {
                           groupName: key,
-                          prefix: c?.prefix,
-                          number: c?.number,
+                          index: j,
                       },
 
                       requirementGroup.suggestedClasses
@@ -123,11 +130,10 @@ export default function DegreePlan() {
               )
 
         const classGroups = requirementGroup.groups?.map((g, j) => {
-            const groupClasses = [...g.classes, undefined].map((c, i) =>
-                formatClass(i, c, {
+            const groupClasses = [...g.classes, undefined].map((c, k) =>
+                formatClass(k, c, {
                     groupName: key,
-                    prefix: c?.prefix,
-                    number: c?.number,
+                    index: k,
                     group: j,
                 })
             )

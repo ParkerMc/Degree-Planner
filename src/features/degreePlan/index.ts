@@ -31,19 +31,12 @@ const degreePlanSlice = createSlice({
                 if (!group.groups) {
                     throw new Error('Failed to find course to remove')
                 }
-                group.groups[action.payload.group].classes = group.groups[
-                    action.payload.group
-                ].classes.filter(
-                    (c) =>
-                        c?.number !== action.payload.number ||
-                        c?.prefix !== action.payload.prefix
+                group.groups[action.payload.group].classes.splice(
+                    action.payload.index,
+                    1
                 )
             } else {
-                group.classes = group.classes?.filter(
-                    (c) =>
-                        c?.number !== action.payload.number ||
-                        c?.prefix !== action.payload.prefix
-                )
+                group.classes?.splice(action.payload.index, 1)
             }
         },
 
@@ -54,19 +47,14 @@ const degreePlanSlice = createSlice({
                 if (!group.groups) {
                     throw new Error('Failed to find course to edit')
                 }
-                classToEdit = group.groups[
-                    action.payload.id.group
-                ].classes.find(
-                    (c) =>
-                        c?.number === action.payload.id.number &&
-                        c?.prefix === action.payload.id.prefix
-                )
+                classToEdit =
+                    group.groups[action.payload.id.group].classes[
+                        action.payload.id.index
+                    ]
             } else {
-                classToEdit = group.classes?.find(
-                    (c) =>
-                        c?.number === action.payload.id.number &&
-                        c?.prefix === action.payload.id.prefix
-                )
+                classToEdit = group.classes
+                    ? group.classes[action.payload.id.index]
+                    : undefined
             }
             if (!classToEdit) {
                 if (action.payload.id.group !== undefined) {
