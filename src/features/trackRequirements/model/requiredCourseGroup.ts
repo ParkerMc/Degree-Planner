@@ -2,5 +2,5 @@ export interface RequiredCourseGroup<T> {
     title?: string
     countRequired?: number
     creditHours?: number
-    classes: (T | undefined)[]
+    classes: T[]
 }

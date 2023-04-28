@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { DegreePlanState } from './model'
 import { RootState } from '../../app/store'
 import { RequirementGroup } from '../trackRequirements/model'
-import { DegreePlanRequiredCourse } from './model/degreePlanRequiredCourse'
+import { DegreePlanRequiredCourse } from './model'
 
 const setupDegreePlan = createAsyncThunk(
     'degreePlan/setup',
@@ -21,13 +21,17 @@ const setupDegreePlan = createAsyncThunk(
                 ...last,
                 groups: last.groups?.map((g) => ({
                     ...g,
-                    classes: g.classes?.map((c) =>
-                        c ? { ...c, default: c, modified: false } : undefined
-                    ),
+                    classes: g.classes.map((c) => ({
+                        ...c,
+                        default: c,
+                        modified: false,
+                    })),
                 })),
-                classes: last.classes?.map((c) =>
-                    c ? { ...c, default: c, modified: false } : undefined
-                ),
+                classes: last.classes?.map((c) => ({
+                    ...c,
+                    default: c,
+                    modified: false,
+                })),
             }
         })
 

@@ -168,13 +168,33 @@ const importTranscript = createAsyncThunk(
             const key = `${row[0]} ${row[1]}`
             let otherGrades: Grade[] = []
             if (classes[key]) {
+                if (
+                    (fastTrack || transfer) &&
+                    classes[key].grade.grade === row[5]
+                ) {
+                    classes[key].transfer = transfer
+                    classes[key].fastTrack = fastTrack
+                    return
+                }
                 otherGrades = [classes[key].grade, ...classes[key].otherGrades]
             }
 
             classes[key] = {
                 prefix: row[0],
                 course: +row[1],
-                name: row[2],
+                name: row[2]
+                    .toLowerCase()
+                    .split(' ')
+                    .map((s) =>
+                        s === 'ii' ||
+                        s === 'cs' ||
+                        s === 'ce' ||
+                        s === 'se' ||
+                        s === 'cs/se'
+                            ? s.toUpperCase()
+                            : s.charAt(0).toUpperCase() + s.substring(1)
+                    )
+                    .join(' '), // Fix capitlization
                 grade: {
                     semester,
                     grade: +row[5] === 0 ? undefined : row[5],

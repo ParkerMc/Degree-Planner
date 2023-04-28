@@ -1,6 +1,6 @@
 import { Class } from '../../student/model'
 import { RequirementGroup } from '../../trackRequirements/model'
-import { DegreePlanRequiredCourse } from './degreePlanRequiredCourse'
+import { DegreePlanRequiredCourse } from './'
 
 export interface DegreePlanState {
     major: string

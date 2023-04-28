@@ -7,11 +7,20 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import DegreePlanRow from '../components/DegreePlanRow'
 import SaveStudentButton from '../components/SaveStudentButton'
 import SemesterSelector from '../components/SemesterSelector'
-import { clearClassOverride, updateClassOverride } from '../features/degreePlan'
-import { DegreePlanRequiredCourse } from '../features/degreePlan/model/degreePlanRequiredCourse'
+import {
+    clearClassOverride,
+    removeCourse,
+    updateClassOverride,
+    upsertCourse,
+} from '../features/degreePlan'
+import {
+    CourseIdentifier,
+    DegreePlanRequiredCourse,
+} from '../features/degreePlan/model'
 import reset from '../features/reset'
 import { setAdmission, setFastTrack, setThesis } from '../features/student'
 import importTranscript from '../features/student/importTranscript'
+import { RequiredCourse } from '../features/trackRequirements/model'
 
 export default function DegreePlan() {
     const dispatch = useAppDispatch()
@@ -41,9 +50,33 @@ export default function DegreePlan() {
         margin: 0px;
     `
 
+    let allClassesByNumber = [
+        ...Object.values(degreePlan.classOverrides),
+        ...Object.values(student.transcript?.classes ?? {}),
+    ].sort((a, b) =>
+        a.prefix === b.prefix
+            ? a.course - b.course
+            : a.prefix.localeCompare(b.prefix)
+    )
+    allClassesByNumber = allClassesByNumber.filter(
+        (c, i) =>
+            i === 0 ||
+            allClassesByNumber[i - 1].prefix !== c.prefix ||
+            allClassesByNumber[i - 1].course !== c.course
+    )
+
+    let allClassesByName = [
+        ...Object.values(degreePlan.classOverrides),
+        ...Object.values(student.transcript?.classes ?? {}),
+    ].sort((a, b) => a.name.localeCompare(b.name))
+    allClassesByName = allClassesByName.filter(
+        (c, i) => i === 0 || allClassesByName[i - 1].name !== c.name
+    )
     const formatClass = (
-        c: DegreePlanRequiredCourse | undefined,
-        i: number
+        i: number,
+        c?: DegreePlanRequiredCourse,
+        id?: CourseIdentifier,
+        suggestedClasses?: RequiredCourse[]
     ) => {
         const classKey = `${c?.prefix} ${c?.number}`
         return (
@@ -52,6 +85,9 @@ export default function DegreePlan() {
                 course={c ?? undefined}
                 overrideClass={degreePlan.classOverrides[classKey]}
                 transcriptClass={student.transcript?.classes[classKey]}
+                suggestedClasses={suggestedClasses}
+                allClassesSortedNumber={allClassesByNumber}
+                allClassesSortedName={allClassesByName}
                 onOverrideChange={(value) =>
                     dispatch(
                         value
@@ -59,26 +95,18 @@ export default function DegreePlan() {
                             : clearClassOverride(classKey)
                     )
                 }
-                // onChange={(v) => {
-                //     setRows([
-                //         ...rows.slice(0, i),
-                //         v ?? '',
-                //         ...rows.slice(i + 1),
-                //     ])
-                // }}
-                // onAdd={() => {
-                //     setRows([...rows, ''])
-                // }}
-                // onRemove={() => {
-                //     if (rows.length > 1) {
-                //         setRows([
-                //             ...rows.slice(0, i),
-                //             ...rows.slice(i + 1),
-                //         ])
-                //     } else {
-                //         setRows([''])
-                //     }
-                // }}
+                onCourseChange={(value) => {
+                    if (!id) {
+                        return
+                    }
+                    dispatch(upsertCourse({ id, value }))
+                }}
+                onRemove={() => {
+                    if (!id) {
+                        return
+                    }
+                    dispatch(removeCourse(id))
+                }}
             />
         )
     }
@@ -88,10 +116,27 @@ export default function DegreePlan() {
 
         const classElements = !requirementGroup.classes
             ? undefined
-            : [...requirementGroup.classes, undefined].map(formatClass)
+            : [...requirementGroup.classes, undefined].map((c, j) =>
+                  formatClass(
+                      j,
+                      c,
+                      {
+                          groupName: key,
+                          index: j,
+                      },
+
+                      requirementGroup.suggestedClasses
+                  )
+              )
 
         const classGroups = requirementGroup.groups?.map((g, j) => {
-            const groupClasses = [...g.classes, undefined].map(formatClass)
+            const groupClasses = [...g.classes, undefined].map((c, k) =>
+                formatClass(k, c, {
+                    groupName: key,
+                    index: k,
+                    group: j,
+                })
+            )
             return (
                 <Box
                     key={j}
@@ -109,7 +154,7 @@ export default function DegreePlan() {
                                     : `${
                                           g.countRequired
                                       } of the following Course${
-                                          g.classes.length > 1 ? 's' : null
+                                          g.classes.length > 1 ? 's' : ''
                                       }`}
                                 {g.creditHours
                                     ? ` (${g.creditHours} Credit Hours)`
