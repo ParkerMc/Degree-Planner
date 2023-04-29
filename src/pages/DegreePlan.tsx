@@ -10,6 +10,7 @@ import SemesterSelector from '../components/SemesterSelector'
 import {
     clearClassOverride,
     removeCourse,
+    setAnticipatedGraduation,
     updateClassOverride,
     upsertCourse,
 } from '../features/degreePlan'
@@ -252,12 +253,23 @@ export default function DegreePlan() {
             >
                 <SemesterSelector
                     semester={student.transcript?.semesterAdmitted}
-                    postfix=" Admitted"
+                    semesterLabel="Semester Admitted"
+                    yaerLabel="Year Admitted"
                     semesterWidth={130}
                     yearWidth={100}
                     disableClearable
                     onChange={(value) =>
                         value ? dispatch(setAdmission(value)) : null
+                    }
+                />
+                <SemesterSelector
+                    semester={degreePlan.anticipatedGraduation}
+                    semesterLabel="Graduation Semester"
+                    yaerLabel="Graduation Year"
+                    semesterWidth={200}
+                    yearWidth={170}
+                    onChange={(value) =>
+                        value ? dispatch(setAnticipatedGraduation(value)) : null
                     }
                 />
                 <FormGroup>
