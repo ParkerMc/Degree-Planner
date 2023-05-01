@@ -74,13 +74,3 @@ export function requiredGrades(
     prediction.avgGrade = inprogressGPA
     return prediction
 }
-
-function gpatoLetter(gpa: number) {
-    let tempKey = 'A'
-    if (gpa > 4.0) return 'Not Possible to achieve GPA'
-    if (gpa < 2.0) return 'C'
-    for (let key in gpaValues) {
-        if (gpa > gpaValues[key]) return tempKey
-        else tempKey = key
-    }
-}

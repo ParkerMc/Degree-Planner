@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { useAppSelector } from '../app/hooks'
 import {
     getGPA,
     requiredGrades,
@@ -19,11 +19,9 @@ export default function Audit() {
         align-items: flex-start;
     `
 
-    const dispatch = useAppDispatch()
-    const [degreePlan, student, trackreqs] = useAppSelector((state) => [
+    const [degreePlan, student] = useAppSelector((state) => [
         state.degreePlan,
         state.student,
-        state.trackRequirements,
     ])
     const studentObject = student.transcript
     let coreClasses: { [key: string]: Class } = {}
