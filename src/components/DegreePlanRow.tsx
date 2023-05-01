@@ -5,7 +5,7 @@ import {
     ButtonGroup,
     TextField,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Class } from '../features/student/model'
 import { RequiredCourse } from '../features/trackRequirements/model'
 import { DegreePlanRequiredCourse } from '../features/degreePlan/model'
@@ -34,16 +34,44 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
             : undefined
     )
 
+    const [courseNumberErrorMessage, setCourseNumberErrorMessage] = useState<
+        string | undefined
+    >(undefined)
+
+    const getErrorMessage = (
+        newCourseNumber?: string,
+        curCourseName?: string
+    ) => {
+        if (!newCourseNumber) {
+            if (curCourseName && curCourseName !== '') {
+                return 'Must have a course number'
+            }
+            return
+        }
+
+        const split = newCourseNumber.split(' ')
+
+        if (split.length !== 2) {
+            return 'Must have prefix and number'
+        }
+
+        if (isNaN(+split[1])) {
+            return 'Second part must be be a number'
+        }
+    }
+
+    const getErrorMessageCallback = useCallback(getErrorMessage, [])
+
     useEffect(() => {
-        setCourseName(
+        const tmpNumber = props.course
+            ? `${props.course?.prefix} ${props.course?.number}`
+            : undefined
+        const tmpName =
             props.course?.name === '' ? undefined : props.course?.name
-        )
-        setCourseNumber(
-            props.course
-                ? `${props.course?.prefix} ${props.course?.number}`
-                : undefined
-        )
-    }, [props.course])
+        setCourseName(tmpName)
+        setCourseNumber(tmpNumber)
+        setCourseNumberErrorMessage(getErrorMessageCallback(tmpNumber, tmpName))
+    }, [props.course, getErrorMessageCallback])
 
     const pushOverrideChange = (value?: Class) => {
         if (props.onOverrideChange) {
@@ -103,102 +131,154 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         label: n,
     }))
 
+    const onCourseNumberChange = (value: null | string | { label: string }) => {
+        const newCourseNumber =
+            typeof value !== 'string'
+                ? value?.label
+                : value !== ''
+                ? value.toUpperCase()
+                : undefined
+
+        if (!newCourseNumber && props.course) {
+            const tmp = courseNumber
+            setCourseNumber('')
+
+            setTimeout(() => setCourseNumber(tmp), 100)
+            return
+        }
+
+        let newCourseName = props.suggestedClasses?.find(
+            (c) => `${c.prefix} ${c.number}` === newCourseNumber
+        )?.name
+
+        if (!newCourseName) {
+            newCourseName =
+                props.allClassesSortedName?.find(
+                    (c) => `${c.prefix} ${c.course}` === newCourseNumber
+                )?.name ?? courseNumber
+                    ? undefined
+                    : courseName
+        }
+
+        const errorMessage = getErrorMessage(newCourseNumber, courseName)
+        setCourseNumber(newCourseNumber)
+        setCourseName(newCourseName)
+        setCourseNumberErrorMessage(errorMessage)
+
+        const split = newCourseNumber?.split(' ')
+        if (props.onCourseChange && split && !errorMessage) {
+            props.onCourseChange({
+                prefix: split[0],
+                number: +split[1],
+                name: newCourseName ?? '',
+            })
+        }
+    }
+
+    const onCourseNameChange = (value: null | string | { label: string }) => {
+        const newCourseName =
+            typeof value !== 'string'
+                ? value?.label
+                : value !== ''
+                ? value
+                : undefined
+
+        if (!newCourseName && courseNumber) {
+            const tmp = courseName
+            setCourseName('')
+
+            setTimeout(() => setCourseName(tmp), 100)
+            return
+        }
+
+        let newCourse = props.suggestedClasses?.find(
+            (c) => c.name === newCourseName
+        )
+
+        if (!newCourse) {
+            const course = props.allClassesSortedName?.find(
+                (c) => c.name === newCourseName
+            )
+            if (course) {
+                newCourse = {
+                    prefix: course.prefix,
+                    number: course.course,
+                    name: course.name,
+                }
+            }
+        }
+        setCourseName(newCourseName ?? '')
+
+        const newCourseNumber = newCourse
+            ? `${newCourse.prefix} ${newCourse.number}`
+            : ''
+        if (!newCourse) {
+            return
+        }
+        setCourseNumber(newCourseNumber)
+
+        if (props.onCourseChange) {
+            props.onCourseChange({
+                prefix: newCourse.prefix,
+                number: newCourse.number,
+                name: newCourseName ?? '',
+            })
+        }
+    }
+
     return (
         <Box sx={{ display: 'flex', gap: '10px' }}>
-            {/* TODO allow freetext */}
             <Autocomplete
                 options={courseNumberOptions}
                 title="Course Number"
-                sx={{ width: 200 }}
+                sx={{ width: 150 }}
+                disableClearable
+                freeSolo
                 renderInput={(params) => (
-                    <TextField {...params} label="Course Number" />
+                    <TextField
+                        {...params}
+                        label="Course Number"
+                        error={courseNumberErrorMessage !== undefined}
+                        helperText={courseNumberErrorMessage}
+                        onBlur={(event) =>
+                            onCourseNumberChange(event.target.value)
+                        }
+                    />
                 )}
                 value={
                     props.course
                         ? courseNumberOptions.find(
                               (c) => c.label === courseNumber
-                          ) ?? null
-                        : null
+                          ) ?? ''
+                        : ''
                 }
-                onChange={(_, value) => {
-                    let newCourseName = props.suggestedClasses?.find(
-                        (c) => `${c.prefix} ${c.number}` === value?.label
-                    )?.name
-
-                    if (!newCourseName) {
-                        newCourseName = props.allClassesSortedName?.find(
-                            (c) => `${c.prefix} ${c.course}` === value?.label
-                        )?.name
-                    }
-
-                    const split = value?.label.split(' ')
-                    if (!split) {
-                        return
-                    }
-
-                    setCourseNumber(value?.label)
-                    setCourseName(newCourseName)
-
-                    if (props.onCourseChange) {
-                        props.onCourseChange({
-                            prefix: split[0],
-                            number: +split[1],
-                            name: newCourseName ?? '',
-                        })
-                    }
-                }}
+                onChange={(_, value) => onCourseNumberChange(value)}
             />
 
             <Autocomplete
                 options={courseNameOptions}
-                sx={{ width: 410 }}
+                disabled={courseNumberErrorMessage !== undefined}
+                sx={{ width: 380 }}
+                disableClearable
                 title="Course Name"
+                freeSolo
                 renderInput={(params) => (
-                    <TextField {...params} label="Course Name" />
+                    <TextField
+                        {...params}
+                        label="Course Name"
+                        onBlur={(event) =>
+                            onCourseNameChange(event.target.value)
+                        }
+                    />
                 )}
                 value={
                     props.course
                         ? courseNameOptions.find(
                               (c) => c.label === courseName
-                          ) ?? null
-                        : null
-                }
-                onChange={(_, value) => {
-                    let newCourse = props.suggestedClasses?.find(
-                        (c) => c.name === value?.label
-                    )
-
-                    if (!newCourse) {
-                        const course = props.allClassesSortedName?.find(
-                            (c) => c.name === value?.label
-                        )
-                        if (course) {
-                            newCourse = {
-                                prefix: course.prefix,
-                                number: course.course,
-                                name: course.name,
-                            }
-                        }
-                    }
-
-                    const newCourseNumber = newCourse
-                        ? `${newCourse.prefix} ${newCourse.number}`
+                          ) ?? ''
                         : ''
-
-                    if (!newCourse) {
-                        return
-                    }
-
-                    setCourseNumber(newCourseNumber)
-                    setCourseName(value?.label ?? '')
-                    if (props.onCourseChange) {
-                        props.onCourseChange({
-                            prefix: newCourse.prefix,
-                            number: newCourse.number,
-                            name: value?.label ?? '',
-                        })
-                    }
-                }}
+                }
+                onChange={(_, value) => onCourseNameChange(value)}
             />
             <GradeSelector
                 disabled={!props.course}
