@@ -208,6 +208,11 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
             }
         }
         setCourseName(newCourseName ?? '')
+        const errorMessage = getErrorMessage(
+            newCourse ? `${newCourse?.prefix} ${newCourse?.number}` : undefined,
+            newCourseName
+        )
+        setCourseNumberErrorMessage(errorMessage)
 
         const newCourseNumber = newCourse
             ? `${newCourse.prefix} ${newCourse.number}`
