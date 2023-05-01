@@ -1,7 +1,7 @@
 import { Class, TranscriptData } from '../student/model'
-interface PredictedGrades {
-    avgGrade?: string
-    classes?: Class[]
+export interface PredictedGrades {
+    avgGrade?: number
+    classes: Class[]
 }
 let gpaValues: { [name: string]: number } = {
     'A+': 4.0,
@@ -43,8 +43,7 @@ function getHours(transcript: TranscriptData) {
 
 export function getGPA(transcript: TranscriptData) {
     let [weightedHours, aggHours] = getHours(transcript)
-    console.log(transcript)
-    return weightedHours / aggHours
+    return (weightedHours / aggHours).toFixed(3)
 }
 
 export function requiredGrades(
@@ -61,8 +60,7 @@ export function requiredGrades(
         .map((key) => transcript.classes[key])
         .filter(({ grade }) => grade.grade === undefined)
 
-    let prediction: PredictedGrades = {}
-    prediction.classes = inprogressClasses
+    let prediction: PredictedGrades = { classes: inprogressClasses }
 
     let inprogressAggHours = 0
     inprogressClasses.forEach(({ course }) => {
@@ -73,7 +71,7 @@ export function requiredGrades(
         requiredGPA * (aggHours + inprogressAggHours) - weightedHours
 
     let inprogressGPA = inprogressWeightedHours / inprogressAggHours
-    prediction.avgGrade = gpatoLetter(inprogressGPA)
+    prediction.avgGrade = inprogressGPA
     return prediction
 }
 
