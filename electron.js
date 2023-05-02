@@ -86,7 +86,7 @@ function handleSquirrelEvent() {
             app.quit()
             return true
         default:
-            return true
+            return false
     }
 }
 
