@@ -4,7 +4,8 @@ import { Semester, SemesterYear } from '../features/student/model'
 
 interface SemesterSelectorProps {
     semester?: SemesterYear
-    postfix?: string
+    semesterLabel?: string
+    yaerLabel?: string
     semesterWidth?: number
     yearWidth?: number
     disabled?: boolean
@@ -31,13 +32,13 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
                 disabled={props.disabled}
                 options={semesters}
                 sx={{ width: props.semesterWidth ?? 150 }}
-                title={`Semester${props.postfix ?? ''}`}
+                title={props.semesterLabel ?? 'Semester'}
                 disableClearable={props.disableClearable}
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label={`Semester${props.postfix ?? ''}`}
+                            label={props.semesterLabel ?? 'Semester'}
                         />
                     )
                 }}
@@ -58,7 +59,8 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
             <TextField
                 disabled={props.disabled}
                 sx={{ width: props.yearWidth ?? 90 }}
-                label={`Year${props.postfix ?? ''}`}
+                label={props.yaerLabel ?? 'Year'}
+                title={props.yaerLabel ?? 'Year'}
                 type={'number'}
                 value={year ?? ''}
                 onChange={(e) => {
@@ -78,11 +80,7 @@ export default function SemesterSelector(props: SemesterSelectorProps) {
                 }}
                 onBlur={(e) => {
                     e.target.value = (+e.target.value).toString()
-                    if (
-                        year &&
-                        props.semester?.year !== year &&
-                        props.onChange
-                    ) {
+                    if (props.semester?.year !== year && props.onChange) {
                         props.onChange({
                             semester: props.semester?.semester,
                             year,

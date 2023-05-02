@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import importSave from '../importSave'
 import reset from '../reset'
-import { Class } from '../student/model'
+import { Class, SemesterYear } from '../student/model'
 import { CourseIdentifier, DegreePlanState, UpsetClassPayload } from './model'
 import setupDegreePlan from './setupDegreePlan'
 
@@ -17,6 +17,12 @@ const degreePlanSlice = createSlice({
     name: 'degreePlan',
     initialState,
     reducers: {
+        setAnticipatedGraduation: (
+            state,
+            action: PayloadAction<SemesterYear | undefined>
+        ) => {
+            state.anticipatedGraduation = action.payload
+        },
         updateClassOverride: (state, action: PayloadAction<Class>) => {
             state.classOverrides[
                 `${action.payload.prefix} ${action.payload.course}`
@@ -94,6 +100,7 @@ export default degreePlanSlice.reducer
 export const {
     clearClassOverride,
     removeCourse,
+    setAnticipatedGraduation,
     updateClassOverride,
     upsertCourse,
 } = degreePlanSlice.actions

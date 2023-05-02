@@ -279,7 +279,17 @@ export default function Print() {
                                         )}
                                     </Header>
                                     <Header>
-                                        Anticipated Graduation:___________
+                                        Anticipated Graduation:{' '}
+                                        {degreePlan.anticipatedGraduation?.year}{' '}
+                                        {
+                                            degreePlan.anticipatedGraduation
+                                                ?.semester
+                                        }
+                                        {degreePlan.anticipatedGraduation
+                                            ?.semester ||
+                                        degreePlan.anticipatedGraduation?.year
+                                            ? null
+                                            : '_____________'}
                                     </Header>
                                 </RightBox>
                             </HeaderContainer>
