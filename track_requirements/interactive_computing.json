@@ -57,12 +57,30 @@
                 {
                     "countRequired": 5,
                     "creditHours": 15,
+                    "preload": "^(?:CS|SE) \\d+$",
                     "classes": []
                 },
                 {
                     "title": "Additional Electives",
                     "creditHours": 3,
-                    "classes": []
+                    "classes": [],
+                    "suggestedClasses": [
+                        {
+                            "name": "Discrete Structures",
+                            "prefix": "CS",
+                            "number": 5333
+                        },
+                        {
+                            "name": "Algorithm Analysis and Data Structures",
+                            "prefix": "CS",
+                            "number": 5343
+                        },
+                        {
+                            "name": "Operating Systems Concepts",
+                            "prefix": "CS",
+                            "number": 5348
+                        }
+                    ]
                 }
             ]
         },
