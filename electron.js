@@ -115,7 +115,7 @@ function createWindow() {
 }
 
 function loadRequirements(event) {
-    const requirementsFolder = path.join(__dirname, 'trackRequirements')
+    const requirementsFolder = path.join(__dirname, 'track_requirements')
     const files = fs
         .readdirSync(requirementsFolder)
         .filter((f) => f.endsWith('.json') && !f.startsWith('package'))
