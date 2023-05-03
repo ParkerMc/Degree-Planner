@@ -139,6 +139,10 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 ? value.toUpperCase()
                 : undefined
 
+        if (value === courseNumber) {
+            return
+        }
+
         if (!newCourseNumber && props.course) {
             const tmp = courseNumber
             setCourseNumber('')
@@ -182,6 +186,9 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 : value !== ''
                 ? value
                 : undefined
+        if (value === courseName) {
+            return
+        }
 
         if (!newCourseName && courseNumber) {
             const tmp = courseName

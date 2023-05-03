@@ -3,4 +3,5 @@ export interface RequiredCourseGroup<T> {
     countRequired?: number
     creditHours?: number
     classes: T[]
+    preload?: string
 }
