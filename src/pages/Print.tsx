@@ -100,21 +100,24 @@ export default function Print() {
                               transcriptCourse?.grade.semester?.semester ?? ''
                           }`
                         : [
-                              ...(transcriptCourse?.otherGrades ?? []),
                               transcriptCourse?.grade,
+                              ...(transcriptCourse?.otherGrades ?? []),
                           ]
                               .filter((g) => g)
                               .map(
                                   (g) =>
-                                      `${g.semester?.year
-                                          ?.toString()
-                                          .slice(-2)}${
+                                      `${
+                                          g.semester?.year
+                                              ?.toString()
+                                              .slice(-2) ?? ''
+                                      }${
                                           semesterMap[
                                               g.semester?.semester ??
                                                   Semester.None
                                           ]
                                       }`
                               )
+                              .filter((v) => v !== '')
                               .join('/')}
                 </Th>
                 <Th>
@@ -127,11 +130,12 @@ export default function Print() {
 
                 <Th>
                     {[
-                        ...(transcriptCourse?.otherGrades ?? []),
                         transcriptCourse?.grade,
+                        ...(transcriptCourse?.otherGrades ?? []),
                     ]
                         .filter((g) => g)
                         .map((g) => g.grade)
+                        .filter((g) => g !== undefined)
                         .join('/')}
                 </Th>
             </Tr>

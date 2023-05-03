@@ -81,8 +81,19 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                     value?.grade.semester?.semester &&
                 props.transcriptClass?.grade.semester?.year ===
                     value?.grade.semester?.year &&
-                props.transcriptClass?.transfer === value?.transfer &&
-                props.transcriptClass?.fastTrack === value?.fastTrack
+                (props.transcriptClass?.transfer ?? false) ===
+                    (value?.transfer ?? false) &&
+                (props.transcriptClass?.fastTrack ?? false) ===
+                    (value?.fastTrack ?? false) &&
+                props.transcriptClass?.otherGrades.length ===
+                    value?.otherGrades.length &&
+                value?.otherGrades.every(
+                    (g, i) =>
+                        props.transcriptClass?.otherGrades[i].grade ===
+                            g.grade &&
+                        props.transcriptClass?.otherGrades[i].semester ===
+                            g.grade
+                )
             ) {
                 props.onOverrideChange(undefined)
                 return
@@ -156,12 +167,12 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         )?.name
 
         if (!newCourseName) {
-            newCourseName =
-                props.allClassesSortedName?.find(
-                    (c) => `${c.prefix} ${c.course}` === newCourseNumber
-                )?.name ?? courseNumber
-                    ? undefined
-                    : courseName
+            newCourseName = props.allClassesSortedName?.find(
+                (c) => `${c.prefix} ${c.course}` === newCourseNumber
+            )?.name
+            if (!newCourseName && courseNumber) {
+                newCourseName = courseName
+            }
         }
 
         const errorMessage = getErrorMessage(newCourseNumber, courseName)
@@ -238,6 +249,10 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         }
     }
 
+    const classEntry = props.overrideClass
+        ? props.overrideClass
+        : props.transcriptClass
+
     return (
         <Box sx={{ display: 'flex', gap: '10px' }}>
             <Autocomplete
@@ -292,31 +307,90 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 }
                 onChange={(_, value) => onCourseNameChange(value)}
             />
-            <GradeSelector
-                disabled={!props.course}
-                grade={
-                    props.overrideClass
-                        ? props.overrideClass.grade
-                        : props.transcriptClass?.grade
-                }
-                onChange={(value) => {
-                    if (!props.onOverrideChange || !props.course) {
-                        return
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <GradeSelector
+                    disabled={!props.course}
+                    grade={classEntry?.grade}
+                    onChange={(value) => {
+                        if (!props.onOverrideChange || !props.course) {
+                            return
+                        }
+                        pushOverrideChange({
+                            prefix: props.course.prefix,
+                            course: props.course.number,
+                            name: props.course.name,
+                            otherGrades: [],
+                            transfer: false,
+                            fastTrack: false,
+                            ...classEntry,
+                            grade: value,
+                        })
+                    }}
+                    addDisabled={
+                        !classEntry?.grade.semester?.semester ||
+                        !classEntry?.grade.semester?.year ||
+                        !classEntry?.grade.grade ||
+                        classEntry?.otherGrades.findIndex(
+                            (g) =>
+                                !g.semester?.semester ||
+                                !g.semester?.year ||
+                                !g.grade
+                        ) > -1
                     }
-                    const oldClass =
-                        props.overrideClass ?? props.transcriptClass
-                    pushOverrideChange({
-                        prefix: props.course.prefix,
-                        course: props.course.number,
-                        name: props.course.name,
-                        otherGrades: [],
-                        transfer: false,
-                        fastTrack: false,
-                        ...oldClass,
-                        grade: value,
-                    })
-                }}
-            />
+                    onAdd={() => {
+                        if (!props.onOverrideChange || !props.course) {
+                            return
+                        }
+
+                        pushOverrideChange({
+                            prefix: props.course.prefix,
+                            course: props.course.number,
+                            name: props.course.name,
+                            grade: {},
+                            transfer: false,
+                            fastTrack: false,
+                            ...classEntry,
+                            otherGrades: [
+                                ...(classEntry?.otherGrades ?? []),
+                                {},
+                            ],
+                        })
+                    }}
+                />
+
+                {classEntry?.otherGrades.map((g, i) => (
+                    <GradeSelector
+                        key={i}
+                        disabled={!props.course}
+                        grade={g}
+                        onChange={(value) => {
+                            if (!props.onOverrideChange || !props.course) {
+                                return
+                            }
+                            pushOverrideChange({
+                                ...classEntry,
+                                otherGrades:
+                                    classEntry?.otherGrades.map((v, j) =>
+                                        j !== i ? v : value
+                                    ) ?? [],
+                            })
+                        }}
+                        onRemove={() => {
+                            if (!props.onOverrideChange || !props.course) {
+                                return
+                            }
+                            pushOverrideChange({
+                                ...classEntry,
+                                otherGrades:
+                                    classEntry?.otherGrades.filter(
+                                        (_, j) => j !== i
+                                    ) ?? [],
+                            })
+                        }}
+                    />
+                ))}
+            </Box>
 
             <Autocomplete
                 disabled={!props.course}
@@ -327,10 +401,9 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                     <TextField {...params} label="Taken As" />
                 )}
                 value={
-                    (props.overrideClass ?? props.transcriptClass)?.fastTrack
+                    classEntry?.fastTrack
                         ? transferOptions[1]
-                        : (props.overrideClass ?? props.transcriptClass)
-                              ?.transfer
+                        : classEntry?.transfer
                         ? transferOptions[0]
                         : null
                 }
@@ -338,15 +411,13 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                     if (!props.onOverrideChange || !props.course) {
                         return
                     }
-                    const oldClass =
-                        props.overrideClass ?? props.transcriptClass
                     pushOverrideChange({
                         prefix: props.course.prefix,
                         course: props.course.number,
                         name: props.course.name,
                         otherGrades: [],
                         grade: {},
-                        ...oldClass,
+                        ...classEntry,
                         transfer: value ? true : false,
                         fastTrack: value === transferOptions[1],
                     })
