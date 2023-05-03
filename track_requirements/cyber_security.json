@@ -57,7 +57,7 @@
                 {
                     "countRequired": 2,
                     "creditHours": 6,
-                    "preload": "^(?:CS|SE) \\d+$",
+                    "preload": "^(?:CS|SE) 6\\d+$",
                     "classes": []
                 }
             ]
