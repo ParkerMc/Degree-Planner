@@ -66,11 +66,11 @@
         ]
     },
     "devDependencies": {
-        "@electron-forge/cli": "^6.0.4",
-        "@electron-forge/maker-deb": "^6.0.4",
-        "@electron-forge/maker-rpm": "^6.0.4",
-        "@electron-forge/maker-squirrel": "^6.0.4",
-        "@electron-forge/maker-zip": "^6.0.4",
+        "@electron-forge/cli": "^6.1.1",
+        "@electron-forge/maker-deb": "^6.1.1",
+        "@electron-forge/maker-rpm": "^6.1.1",
+        "@electron-forge/maker-squirrel": "^6.1.1",
+        "@electron-forge/maker-zip": "^6.1.1",
         "@types/redux-logger": "^3.0.9",
         "concurrently": "^7.6.0",
         "cross-env": "^7.0.3",
