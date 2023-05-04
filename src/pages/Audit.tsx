@@ -8,15 +8,23 @@ import {
 import { TranscriptData } from '../features/student/model/transcriptData'
 import { Class } from '../features/student/model/'
 import { RequiredCourse } from '../features/trackRequirements/model'
+import { Box, Button } from '@mui/material'
+import { ArrowBack, Print } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 export default function Audit() {
+    const navigate = useNavigate()
+
     const Container = styled.div`
         display: flex;
+        flex-direction: column;
         background-color: white;
         color: black;
         flex-grow: 1;
-        justify-content: center;
-        align-items: flex-start;
+        align-items: center;
+    `
+    const Header = styled.h3`
+        align-self: center;
     `
 
     const [degreePlan, student] = useAppSelector((state) => [
@@ -197,42 +205,86 @@ export default function Audit() {
 
     return (
         <Container>
-            <h1>Audit Report</h1>
-            <div>
-                <p>Name:{studentObject?.name}</p>
-                <p>Plan: Master</p>
-                <p>ID: {studentObject?.id} </p>
-                <p>Major: {degreePlan.major}</p>
-                <p>Track: {degreePlan.track}</p>
-                <p>Core GPA: {getGPA(coreGPAtranscript as TranscriptData)}</p>
-                <p>
-                    Elective GPA:{' '}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Header>Audit Report</Header>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box>
+                        <b>Name:</b> {studentObject?.name}
+                        <br />
+                        <b>Plan:</b> Master
+                        <br />
+                    </Box>
+                    <Box>
+                        <b>ID:</b> {studentObject?.id}
+                        <br />
+                        <b>Major:</b> {degreePlan.major}
+                        <br />
+                        <b>Track:</b> {degreePlan.track}
+                    </Box>
+                </Box>
+                <Box sx={{ marginTop: '1.5em' }}>
+                    <b>Core GPA:</b>{' '}
+                    {getGPA(coreGPAtranscript as TranscriptData)} <br />
+                    <b>Elective GPA:</b>{' '}
                     {getGPA(electiveGPAtranscript as TranscriptData)}
-                </p>
-                <p>Combined GPA: {getGPA(studentObject as TranscriptData)}</p>
-                <p>Core Courses: {coreString} </p>
-                <p>Elective Courses: {electiveString}</p>
-                <p>
-                    Leveling Courses and Pre-requisites from Admission Letter:
+                    <br />
+                    <b>Combined GPA:</b>{' '}
+                    {getGPA(studentObject as TranscriptData)}
+                </Box>
+                <Box sx={{ marginTop: '1.5em' }}>
+                    <b>Core Courses:</b> {coreString} <br />
+                    <b>Elective Courses:</b> {electiveString}
+                </Box>
+                <Box>
+                    <h4>
+                        Leveling Courses and Pre-requisites from Admission
+                        Letter:
+                    </h4>{' '}
                     {preReqString}
-                </p>
-                <p>Outstanding Requiremtents:</p>
-                <p>
+                </Box>
+                <Box>
+                    <h4>Outstanding Requiremtents:</h4>
                     Core:{' '}
                     {requirments(
                         corePrediction,
                         degreePlan.requirements.core.gpaRequired!
                     )}
-                </p>
-                <p>
+                    <br />
                     Elective:{' '}
                     {requirments(
                         electivePrediction,
                         degreePlan.requirements.electives.gpaRequired!
                     )}
-                </p>
-                <p>Overall: {requirments(overallPrediction, 3.0)}</p>
-            </div>
+                    <br />
+                    <p>Overall: {requirments(overallPrediction, 3.0)}</p>
+                </Box>
+                <Box
+                    className="noprint"
+                    sx={{
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        display: 'flex',
+                        alignSelf: 'stretch',
+                        justifyContent: 'space-around',
+                        gap: '10px',
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        title="Back"
+                        onClick={() => navigate('/degreePlan')}
+                    >
+                        <ArrowBack /> Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        title="Print"
+                        onClick={window.print}
+                    >
+                        <Print /> Print
+                    </Button>
+                </Box>
+            </Box>
         </Container>
     )
 }
