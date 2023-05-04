@@ -225,7 +225,7 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                 }
             }
         }
-        setCourseName(newCourseName ?? '')
+
         const errorMessage = getErrorMessage(
             newCourse ? `${newCourse?.prefix} ${newCourse?.number}` : undefined,
             newCourseName
@@ -235,10 +235,11 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         const newCourseNumber = newCourse
             ? `${newCourse.prefix} ${newCourse.number}`
             : ''
+        setCourseNumber(newCourseNumber)
+        setCourseName(newCourseName ?? '')
         if (!newCourse) {
             return
         }
-        setCourseNumber(newCourseNumber)
 
         if (props.onCourseChange) {
             props.onCourseChange({
