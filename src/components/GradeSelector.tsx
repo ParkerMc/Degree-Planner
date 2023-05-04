@@ -32,7 +32,10 @@ export default function GradeSelector(props: GradeSelectorProps) {
         }
         props.onChange({
             semester: props.grade?.semester,
-            grade: newGrade?.trim() === '' ? undefined : newGrade,
+            grade:
+                newGrade?.trim() === ''
+                    ? undefined
+                    : newGrade?.trim().toUpperCase(),
         })
     }
     return (

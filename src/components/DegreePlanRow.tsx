@@ -170,13 +170,14 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
             newCourseName = props.allClassesSortedName?.find(
                 (c) => `${c.prefix} ${c.course}` === newCourseNumber
             )?.name
-            if (!newCourseName && courseNumber) {
+            if (!newCourseName && courseNumber === newCourseNumber) {
                 newCourseName = courseName
             }
         }
 
-        const errorMessage = getErrorMessage(newCourseNumber, courseName)
+        const errorMessage = getErrorMessage(newCourseNumber, newCourseName)
         setCourseNumber(newCourseNumber)
+        console.log(newCourseName)
         setCourseName(newCourseName)
         setCourseNumberErrorMessage(errorMessage)
 
@@ -236,14 +237,15 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
         setCourseNumberErrorMessage(errorMessage)
         setCourseNumber(newCourseNumber)
         setCourseName(newCourseName ?? '')
-        if (!newCourse) {
+
+        if (!newCourse && !props.course) {
             return
         }
 
         if (props.onCourseChange) {
             props.onCourseChange({
-                prefix: newCourse.prefix,
-                number: newCourse.number,
+                prefix: (newCourse?.prefix ?? props.course?.prefix)!, // We check above
+                number: (newCourse?.number ?? props.course?.number)!,
                 name: newCourseName ?? '',
             })
         }
