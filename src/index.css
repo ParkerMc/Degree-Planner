@@ -23,3 +23,9 @@ body {
     justify-content: center;
     flex-grow: 1;
 }
+
+@media print {
+    .noprint {
+        display: none !important;
+    }
+}

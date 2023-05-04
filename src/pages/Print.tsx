@@ -3,27 +3,32 @@ import { useAppSelector } from '../app/hooks'
 import { Fragment } from 'react'
 import { RequiredCourse } from '../features/trackRequirements/model'
 import {
+    ArrowBack,
     CheckBoxOutlineBlankOutlined,
     CheckBoxOutlined,
+    Print as PrintIcon,
 } from '@mui/icons-material'
 import { Semester } from '../features/student/model'
+import { Box, Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 export default function Print() {
     const [degreePlan, student] = useAppSelector((state) => [
         state.degreePlan,
         state.student,
     ])
+    const navigate = useNavigate()
 
     const Container = styled.div`
         display: flex;
+        flex-direction: column;
         background-color: white;
+        color: black;
         flex-grow: 1;
-        justify-content: center;
-        align-items: flex-start;
+        align-items: center;
     `
 
     const Table = styled.table`
-        color: black;
         background-color: white;
         border: 1.5px solid black;
         border-collapse: collapse;
@@ -230,85 +235,118 @@ export default function Print() {
 
     return (
         <Container>
-            <Table>
-                <tbody>
-                    <Tr>
-                        <HeaderCol colSpan={5}>
-                            <Header>Degree Plan</Header>
-                            <Header>Univeristy of Texas at Dallas</Header>
-                            <Header>
-                                Master of {student.transcript?.major}
-                            </Header>
+            <Box>
+                <Table>
+                    <tbody>
+                        <Tr>
+                            <HeaderCol colSpan={5}>
+                                <Header>Degree Plan</Header>
+                                <Header>Univeristy of Texas at Dallas</Header>
+                                <Header>
+                                    Master of {student.transcript?.major}
+                                </Header>
 
-                            <br />
-                            <Header>{degreePlan.track}</Header>
-                            <br />
-                            <HeaderContainer>
-                                <LeftBox>
-                                    <Header>
-                                        Name of Student:{' '}
-                                        {student.transcript?.name}
-                                    </Header>
-                                    <Header>
-                                        Student I.D. Number:{' '}
-                                        {student.transcript?.id}
-                                    </Header>
-                                    <Header>
-                                        Semester Admitted To Program:{' '}
-                                        {
-                                            student.transcript?.semesterAdmitted
-                                                .year
-                                        }{' '}
-                                        {
-                                            student.transcript?.semesterAdmitted
-                                                .semester
-                                        }
-                                    </Header>
-                                </LeftBox>
-                                <RightBox>
-                                    <Header>
-                                        FT :{' '}
-                                        {student.additionalInfo.fastTrack ? (
-                                            <CheckBoxOutlined />
-                                        ) : (
-                                            <CheckBoxOutlineBlankOutlined />
-                                        )}
-                                    </Header>
-                                    <Header>
-                                        Thesis :{' '}
-                                        {student.additionalInfo.thesis ? (
-                                            <CheckBoxOutlined />
-                                        ) : (
-                                            <CheckBoxOutlineBlankOutlined />
-                                        )}
-                                    </Header>
-                                    <Header>
-                                        Anticipated Graduation:{' '}
-                                        {degreePlan.anticipatedGraduation?.year}{' '}
-                                        {
+                                <br />
+                                <Header>{degreePlan.track}</Header>
+                                <br />
+                                <HeaderContainer>
+                                    <LeftBox>
+                                        <Header>
+                                            Name of Student:{' '}
+                                            {student.transcript?.name}
+                                        </Header>
+                                        <Header>
+                                            Student I.D. Number:{' '}
+                                            {student.transcript?.id}
+                                        </Header>
+                                        <Header>
+                                            Semester Admitted To Program:{' '}
+                                            {
+                                                student.transcript
+                                                    ?.semesterAdmitted.year
+                                            }{' '}
+                                            {
+                                                student.transcript
+                                                    ?.semesterAdmitted.semester
+                                            }
+                                        </Header>
+                                    </LeftBox>
+                                    <RightBox>
+                                        <Header>
+                                            FT :{' '}
+                                            {student.additionalInfo
+                                                .fastTrack ? (
+                                                <CheckBoxOutlined />
+                                            ) : (
+                                                <CheckBoxOutlineBlankOutlined />
+                                            )}
+                                        </Header>
+                                        <Header>
+                                            Thesis :{' '}
+                                            {student.additionalInfo.thesis ? (
+                                                <CheckBoxOutlined />
+                                            ) : (
+                                                <CheckBoxOutlineBlankOutlined />
+                                            )}
+                                        </Header>
+                                        <Header>
+                                            Anticipated Graduation:{' '}
+                                            {
+                                                degreePlan.anticipatedGraduation
+                                                    ?.year
+                                            }{' '}
+                                            {
+                                                degreePlan.anticipatedGraduation
+                                                    ?.semester
+                                            }
+                                            {degreePlan.anticipatedGraduation
+                                                ?.semester ||
                                             degreePlan.anticipatedGraduation
-                                                ?.semester
-                                        }
-                                        {degreePlan.anticipatedGraduation
-                                            ?.semester ||
-                                        degreePlan.anticipatedGraduation?.year
-                                            ? null
-                                            : '_____________'}
-                                    </Header>
-                                </RightBox>
-                            </HeaderContainer>
-                        </HeaderCol>
-                    </Tr>
-                    <Tr>
-                        <Th>Course Title</Th>
-                        <Th>Course Number</Th>
-                        <Th>UTD Semester</Th>
-                        <Th>Transfer</Th>
-                        <Th>Grade</Th>
-                    </Tr>
-                    {groups}
-                </tbody>
-            </Table>
+                                                ?.year
+                                                ? null
+                                                : '_____________'}
+                                        </Header>
+                                    </RightBox>
+                                </HeaderContainer>
+                            </HeaderCol>
+                        </Tr>
+                        <Tr>
+                            <Th>Course Title</Th>
+                            <Th>Course Number</Th>
+                            <Th>UTD Semester</Th>
+                            <Th>Transfer</Th>
+                            <Th>Grade</Th>
+                        </Tr>
+                        {groups}
+                    </tbody>
+                </Table>
+                <Box
+                    className="noprint"
+                    sx={{
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        display: 'flex',
+                        alignSelf: 'stretch',
+                        justifyContent: 'space-around',
+                        gap: '10px',
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        title="Back"
+                        onClick={() => navigate('/degreePlan')}
+                    >
+                        <ArrowBack /> Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        title="Print"
+                        onClick={window.print}
+                    >
+                        <PrintIcon /> Print
+                    </Button>
+                </Box>
+            </Box>
         </Container>
     )
 }
