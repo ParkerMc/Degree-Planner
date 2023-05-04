@@ -236,27 +236,27 @@ export default function Audit() {
                     <b>Elective Courses:</b> {electiveString}
                 </Box>
                 <Box>
-                    <h4>
+                    <b>
                         Leveling Courses and Pre-requisites from Admission
                         Letter:
-                    </h4>{' '}
+                    </b>{' '}
                     {preReqString}
                 </Box>
                 <Box>
                     <h4>Outstanding Requiremtents:</h4>
-                    Core:{' '}
+                    <b>Core:</b>{' '}
                     {requirments(
                         corePrediction,
                         degreePlan.requirements.core.gpaRequired!
                     )}
                     <br />
-                    Elective:{' '}
+                    <b>Elective:</b>{' '}
                     {requirments(
                         electivePrediction,
                         degreePlan.requirements.electives.gpaRequired!
                     )}
                     <br />
-                    <p>Overall: {requirments(overallPrediction, 3.0)}</p>
+                    <b>Overall:</b> {requirments(overallPrediction, 3.0)}
                 </Box>
                 <Box
                     className="noprint"
