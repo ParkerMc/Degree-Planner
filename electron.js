@@ -39,7 +39,6 @@ if (!handleSquirrelEvent()) {
 }
 
 function handleSquirrelEvent() {
-    console.log(process.argv)
     if (process.argv.length === 1) {
         return false
     }
@@ -51,6 +50,7 @@ function handleSquirrelEvent() {
     const rootAtomFolder = path.resolve(appFolder, '..')
     const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'))
     const exeName = path.basename(process.execPath)
+    console.log(process.execPath, exeName)
 
     const spawn = function (command, args) {
         let spawnedProcess
