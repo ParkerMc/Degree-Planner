@@ -109,8 +109,8 @@ function createWindow() {
     ipcMain.handle('degreeRequirements', loadRequirements)
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1500,
+        height: 1000,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
