@@ -1,6 +1,20 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const fs = require('fs')
 const path = require('path')
+
+// Logging
+const util = require('util')
+const logFile = fs.createWriteStream('electron.log', { flags: 'a' })
+// Or 'w' to truncate the file every time the process starts.
+const logStdout = process.stdout
+
+console.log = function () {
+    logFile.write(util.format.apply(null, arguments) + '\n')
+    logStdout.write(util.format.apply(null, arguments) + '\n')
+}
+console.error = console.log
+// End logging
+
 // Handle install here
 if (!handleSquirrelEvent()) {
     // This method will be called when Electron has finished
@@ -25,6 +39,7 @@ if (!handleSquirrelEvent()) {
 }
 
 function handleSquirrelEvent() {
+    console.log(process.argv)
     if (process.argv.length === 1) {
         return false
     }
