@@ -169,14 +169,8 @@ export default function Audit() {
         classes: electiveClasses,
     }
 
-    let coreString = ''
-    Object.keys(coreClasses).forEach((key) => {
-        coreString = coreString.concat(key, ' ')
-    })
-    let electiveString = ''
-    Object.keys(electiveClasses).forEach((key) => {
-        electiveString = electiveString.concat(key, ' ')
-    })
+    const coreString = Object.keys(coreClasses).join(', ')
+    const electiveString = Object.keys(electiveClasses).join(', ')
 
     //make outstanding requirements
     const corePrediction = requiredGrades(
@@ -193,15 +187,12 @@ export default function Audit() {
     )
 
     // print out pre reqs to string actually write code to check after presentation
-    let preReqString = ''
-    degreePlan.requirements.prerequisites.classes!.forEach(
-        ({ prefix, number }) => {
-            preReqString = preReqString.concat(`${prefix} ${number} `)
-        }
-    )
-    degreePlan.requirements.other.classes!.forEach(({ prefix, number }) => {
-        preReqString = preReqString.concat(`${prefix} ${number} `)
-    })
+    const preReqString = degreePlan.requirements.prerequisites
+        .classes!.concat(degreePlan.requirements.other.classes!)
+        .map(({ prefix, number }) => {
+            return `${prefix} ${number}`
+        })
+        .join(', ')
 
     return (
         <Container>
