@@ -103,6 +103,11 @@
             "classes": [],
             "suggestedClasses": [
                 {
+                    "name": "Probability & Statistics in CS",
+                    "prefix": "CS",
+                    "number": 3341
+                },
+                {
                     "name": "Computer Science I",
                     "prefix": "CS",
                     "number": 5303
@@ -128,9 +133,19 @@
                     "number": 5348
                 },
                 {
-                    "name": "Probability & Statistics in CS",
+                    "name": "Automata Theory",
                     "prefix": "CS",
-                    "number": 3341
+                    "number": 5349
+                },
+                {
+                    "name": "Software Engineering",
+                    "prefix": "CS",
+                    "number": 5354
+                },
+                {
+                    "name": "Computer Networks",
+                    "prefix": "CS",
+                    "number": 5390
                 }
             ]
         }
