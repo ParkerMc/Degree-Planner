@@ -11,6 +11,7 @@ import { RequiredCourse } from '../features/trackRequirements/model'
 import { Box, Button } from '@mui/material'
 import { ArrowBack, Print } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import { Fragment } from 'react'
 
 export default function Audit() {
     const navigate = useNavigate()
@@ -31,9 +32,17 @@ export default function Audit() {
         state.degreePlan,
         state.student,
     ])
-    const studentObject = student.transcript
+    const studentObjectTemp = student.transcript
+    const studentObject = JSON.parse(
+        JSON.stringify(studentObjectTemp!)
+    ) as TranscriptData
     let coreClasses: { [key: string]: Class } = {}
     let electiveClasses: { [key: string]: Class } = {}
+
+    //override classes
+    for (const [key] of Object.entries(degreePlan.classOverrides)) {
+        studentObject!.classes[key] = degreePlan.classOverrides[key]
+    }
 
     //find the elective classes
     degreePlan.requirements.electives.groups![0].classes.forEach(
@@ -95,41 +104,34 @@ export default function Audit() {
 
     //find the elective core in the requirments
     let nonElectivecourses: RequiredCourse[] = []
-    degreePlan.requirements.core.groups![0].classes.forEach(
-        ({ prefix, number, name }) => {
-            if (electiveClasses[`${prefix} ${number}`] === undefined) {
-                nonElectivecourses.push({
-                    prefix: prefix,
-                    number: number,
-                    name: name,
-                })
+    if (degreePlan.requirements.core.groups !== undefined) {
+        degreePlan.requirements.core.groups![0].classes.forEach(
+            ({ prefix, number, name }) => {
+                if (electiveClasses[`${prefix} ${number}`] === undefined) {
+                    nonElectivecourses.push({
+                        prefix: prefix,
+                        number: number,
+                        name: name,
+                    })
+                }
             }
-        }
-    )
+        )
+    }
     // core electives not in electives, check to see if they have a grade and or date
     let gradedcourses: RequiredCourse[] = []
     let nongradedcourses: RequiredCourse[] = []
-    let nonexistantcourses: RequiredCourse[] = []
     nonElectivecourses.forEach(({ prefix, number, name }) => {
-        try {
-            if (
-                studentObject?.classes[`${prefix} ${number}`].grade.grade !==
-                undefined
-            ) {
-                gradedcourses.push({
-                    prefix: prefix,
-                    number: number,
-                    name: name,
-                })
-            } else {
-                nongradedcourses.push({
-                    prefix: prefix,
-                    number: number,
-                    name: name,
-                })
-            }
-        } catch (e) {
-            nonexistantcourses.push({
+        if (
+            studentObject?.classes[`${prefix} ${number}`]?.grade.grade !==
+            undefined
+        ) {
+            gradedcourses.push({
+                prefix: prefix,
+                number: number,
+                name: name,
+            })
+        } else {
+            nongradedcourses.push({
                 prefix: prefix,
                 number: number,
                 name: name,
@@ -139,28 +141,29 @@ export default function Audit() {
 
     //see if the graded courses meet the requirement if not add the ones with semesters and if not choose random
 
-    if (
-        gradedcourses.length ===
-        degreePlan.requirements.core.groups![0].countRequired!
-    ) {
-        gradedcourses.forEach(({ prefix, number, name }) => {
-            coreClasses[`${prefix} ${number}`] =
-                studentObject!.classes[`${prefix} ${number}`]
-        })
-    } else if (
-        gradedcourses.length <
-        degreePlan.requirements.core.groups![0].countRequired!
-    ) {
-        gradedcourses.forEach(({ prefix, number, name }) => {
-            coreClasses[`${prefix} ${number}`] =
-                studentObject!.classes[`${prefix} ${number}`]
-        })
-        nongradedcourses.forEach(({ prefix, number, name }) => {
-            coreClasses[`${prefix} ${number}`] =
-                studentObject!.classes[`${prefix} ${number}`]
-        })
+    if (degreePlan.requirements.core.groups !== undefined) {
+        if (
+            gradedcourses.length ===
+            degreePlan.requirements.core.groups![0].countRequired!
+        ) {
+            gradedcourses.forEach(({ prefix, number, name }) => {
+                coreClasses[`${prefix} ${number}`] =
+                    studentObject!.classes[`${prefix} ${number}`]
+            })
+        } else if (
+            gradedcourses.length <
+            degreePlan.requirements.core.groups![0].countRequired!
+        ) {
+            gradedcourses.forEach(({ prefix, number, name }) => {
+                coreClasses[`${prefix} ${number}`] =
+                    studentObject!.classes[`${prefix} ${number}`]
+            })
+            nongradedcourses.forEach(({ prefix, number, name }) => {
+                coreClasses[`${prefix} ${number}`] =
+                    studentObject!.classes[`${prefix} ${number}`]
+            })
+        }
     }
-
     //list out the core and elective courses
 
     const coreGPAtranscript = { ...studentObject, classes: coreClasses }
@@ -190,9 +193,22 @@ export default function Audit() {
     const preReqString = degreePlan.requirements.prerequisites
         .classes!.concat(degreePlan.requirements.other.classes!)
         .map(({ prefix, number }) => {
-            return `${prefix} ${number}`
+            return `${prefix} ${number} ${
+                studentObject.classes[`${prefix} ${number}`]?.grade.grade !==
+                undefined
+                    ? `: Completed ${
+                          studentObject.classes[`${prefix} ${number}`].grade
+                              .semester?.semester
+                      } ${
+                          studentObject.classes[`${prefix} ${number}`].grade
+                              .semester?.year
+                      } : ${
+                          studentObject.classes[`${prefix} ${number}`].grade
+                              .grade
+                      }`
+                    : `: Not Completed`
+            }`
         })
-        .join(', ')
 
     return (
         <Container>
@@ -231,7 +247,14 @@ export default function Audit() {
                         Leveling Courses and Pre-requisites from Admission
                         Letter:
                     </b>{' '}
-                    {preReqString}
+                    {preReqString.length > 0
+                        ? preReqString.map((s, i) => (
+                              <Fragment key={i}>
+                                  <br />
+                                  {s}
+                              </Fragment>
+                          ))
+                        : 'None'}
                 </Box>
                 <Box>
                     <h4>Outstanding Requiremtents:</h4>
@@ -294,7 +317,9 @@ function requirments(prediction: PredictedGrades, requiredGPA: number) {
         prediction.classes.forEach(({ prefix, course }) => {
             classList = classList.concat(`${prefix} ${course} `)
         })
-        return `To maintain ${requiredGPA} GPA\n   The Student needs a GPA >= ${prediction.avgGrade} in: ${classList} `
+        return `To maintain ${requiredGPA} GPA\n   The Student needs a GPA >= ${prediction.avgGrade?.toFixed(
+            2
+        )} in: ${classList} `
     } else {
         let classList = ''
         prediction.classes.forEach(({ prefix, course }) => {
