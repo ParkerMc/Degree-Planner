@@ -11,6 +11,7 @@ import { RequiredCourse } from '../features/trackRequirements/model'
 import { Box, Button } from '@mui/material'
 import { ArrowBack, Print } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import { Fragment } from 'react'
 
 export default function Audit() {
     const navigate = useNavigate()
@@ -213,9 +214,26 @@ export default function Audit() {
     const preReqString = degreePlan.requirements.prerequisites
         .classes!.concat(degreePlan.requirements.other.classes!)
         .map(({ prefix, number }) => {
-            return `${prefix} ${number}`
+            try {
+                return `${prefix} ${number} ${
+                    studentObject.classes[`${prefix} ${number}`].grade.grade !==
+                    undefined
+                        ? `: Completed ${
+                              studentObject.classes[`${prefix} ${number}`].grade
+                                  .semester.semester
+                          } ${
+                              studentObject.classes[`${prefix} ${number}`].grade
+                                  .semester.year
+                          } : ${
+                              studentObject.classes[`${prefix} ${number}`].grade
+                                  .grade
+                          }`
+                        : `: Not Completed`
+                }`
+            } catch (e) {
+                return `${prefix} ${number}: Not Completed`
+            }
         })
-        .join(', ')
 
     return (
         <Container>
@@ -254,7 +272,14 @@ export default function Audit() {
                         Leveling Courses and Pre-requisites from Admission
                         Letter:
                     </b>{' '}
-                    {preReqString !== '' ? preReqString : 'None'}
+                    {preReqString.length > 0
+                        ? preReqString.map((s, i) => (
+                              <Fragment key={i}>
+                                  <br />
+                                  {s}
+                              </Fragment>
+                          ))
+                        : 'None'}
                 </Box>
                 <Box>
                     <h4>Outstanding Requiremtents:</h4>
