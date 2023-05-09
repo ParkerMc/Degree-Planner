@@ -85,8 +85,8 @@ export default function DegreePlanRow(props: DegreePlanRowProps) {
                     (value?.transfer ?? false) &&
                 (props.transcriptClass?.fastTrack ?? false) ===
                     (value?.fastTrack ?? false) &&
-                props.transcriptClass?.otherGrades.length ===
-                    value?.otherGrades.length &&
+                (props.transcriptClass?.otherGrades.length ?? 0) ===
+                    (value?.otherGrades.length ?? 0) &&
                 value?.otherGrades.every(
                     (g, i) =>
                         props.transcriptClass?.otherGrades[i].grade ===
