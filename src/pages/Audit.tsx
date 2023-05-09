@@ -33,7 +33,9 @@ export default function Audit() {
         state.student,
     ])
     const studentObjectTemp = student.transcript
-    const studentObject = JSON.parse(JSON.stringify(studentObjectTemp!))
+    const studentObject = JSON.parse(
+        JSON.stringify(studentObjectTemp!)
+    ) as TranscriptData
     let coreClasses: { [key: string]: Class } = {}
     let electiveClasses: { [key: string]: Class } = {}
 
@@ -83,24 +85,10 @@ export default function Audit() {
 
     degreePlan.requirements.core.classes!.forEach(
         ({ prefix, number, name }) => {
-            try {
-                if (
-                    studentObject?.classes[`${prefix} ${number}`] !== undefined
-                ) {
-                    coreClasses[`${prefix} ${number}`] =
-                        studentObject?.classes[`${prefix} ${number}`]
-                } else {
-                    coreClasses[`${prefix} ${number}`] = {
-                        prefix: prefix,
-                        course: number,
-                        name: name,
-                        grade: {},
-                        otherGrades: [],
-                        transfer: false,
-                        fastTrack: false,
-                    }
-                }
-            } catch (e) {
+            if (studentObject?.classes[`${prefix} ${number}`] !== undefined) {
+                coreClasses[`${prefix} ${number}`] =
+                    studentObject?.classes[`${prefix} ${number}`]
+            } else {
                 coreClasses[`${prefix} ${number}`] = {
                     prefix: prefix,
                     course: number,
@@ -132,27 +120,18 @@ export default function Audit() {
     // core electives not in electives, check to see if they have a grade and or date
     let gradedcourses: RequiredCourse[] = []
     let nongradedcourses: RequiredCourse[] = []
-    let nonexistantcourses: RequiredCourse[] = []
     nonElectivecourses.forEach(({ prefix, number, name }) => {
-        try {
-            if (
-                studentObject?.classes[`${prefix} ${number}`].grade.grade !==
-                undefined
-            ) {
-                gradedcourses.push({
-                    prefix: prefix,
-                    number: number,
-                    name: name,
-                })
-            } else {
-                nongradedcourses.push({
-                    prefix: prefix,
-                    number: number,
-                    name: name,
-                })
-            }
-        } catch (e) {
-            nonexistantcourses.push({
+        if (
+            studentObject?.classes[`${prefix} ${number}`]?.grade.grade !==
+            undefined
+        ) {
+            gradedcourses.push({
+                prefix: prefix,
+                number: number,
+                name: name,
+            })
+        } else {
+            nongradedcourses.push({
                 prefix: prefix,
                 number: number,
                 name: name,
@@ -214,25 +193,21 @@ export default function Audit() {
     const preReqString = degreePlan.requirements.prerequisites
         .classes!.concat(degreePlan.requirements.other.classes!)
         .map(({ prefix, number }) => {
-            try {
-                return `${prefix} ${number} ${
-                    studentObject.classes[`${prefix} ${number}`].grade.grade !==
-                    undefined
-                        ? `: Completed ${
-                              studentObject.classes[`${prefix} ${number}`].grade
-                                  .semester.semester
-                          } ${
-                              studentObject.classes[`${prefix} ${number}`].grade
-                                  .semester.year
-                          } : ${
-                              studentObject.classes[`${prefix} ${number}`].grade
-                                  .grade
-                          }`
-                        : `: Not Completed`
-                }`
-            } catch (e) {
-                return `${prefix} ${number}: Not Completed`
-            }
+            return `${prefix} ${number} ${
+                studentObject.classes[`${prefix} ${number}`]?.grade.grade !==
+                undefined
+                    ? `: Completed ${
+                          studentObject.classes[`${prefix} ${number}`].grade
+                              .semester?.semester
+                      } ${
+                          studentObject.classes[`${prefix} ${number}`].grade
+                              .semester?.year
+                      } : ${
+                          studentObject.classes[`${prefix} ${number}`].grade
+                              .grade
+                      }`
+                    : `: Not Completed`
+            }`
         })
 
     return (
